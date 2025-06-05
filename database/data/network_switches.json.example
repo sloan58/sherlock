@@ -1,0 +1,16 @@
+[
+    {
+        "host": "192.168.1.1",
+        "username": "admin",
+        "password": "your_password_here",
+        "type": "cisco_ios",
+        "port": "22"
+    },
+    {
+        "host": "switch2.example.com",
+        "username": "admin",
+        "password": "your_password_here",
+        "type": "cisco_nxos",
+        "port": "22"
+    }
+] 

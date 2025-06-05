@@ -5,6 +5,11 @@ export interface Auth {
     user: User;
 }
 
+export interface PageProps {
+    auth: Auth;
+    ziggy: Config & { location: string };
+}
+
 export interface BreadcrumbItem {
     title: string;
     href: string;
