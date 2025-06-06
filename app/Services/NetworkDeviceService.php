@@ -4,16 +4,15 @@ namespace App\Services;
 
 use Exception;
 use Throwable;
-use App\Jobs\MacLookupJob;
 use Illuminate\Bus\Batch;
+use App\Jobs\MacLookupJob;
 use App\Models\MacAddress;
 use App\Models\NetworkSwitch;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Bus;
-use App\Jobs\ProcessNetworkInterfaceJob;
 use Illuminate\Support\Facades\Process;
+use App\Jobs\ProcessNetworkInterfaceJob;
 use App\Jobs\ProcessInterfaceDescriptionJob;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class NetworkDeviceService
 {
@@ -323,8 +322,8 @@ class NetworkDeviceService
 
             $result = $process->run($command);
 
-            if (!$result->successful()) {
-                throw new ProcessFailedException($result);
+            if ($result->failed()) {
+                throw new \RuntimeException('Process failed: ' . $result->errorOutput());
             }
 
             // Decode the JSON response from Python

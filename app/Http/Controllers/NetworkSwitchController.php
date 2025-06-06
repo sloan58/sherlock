@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NetworkSwitch;
-use Illuminate\Http\Request;
+use Exception;
 use Inertia\Inertia;
 use App\Jobs\WalkDeviceJob;
+use Illuminate\Http\Request;
+use App\Models\NetworkSwitch;
+use Illuminate\Http\RedirectResponse;
 
 class NetworkSwitchController extends Controller
 {
@@ -69,7 +71,7 @@ class NetworkSwitchController extends Controller
 
         $networkSwitch->update($validated);
 
-        return redirect()->route('network-switches.show', $networkSwitch)
+        return redirect()->route('network-switches.edit', $networkSwitch)
             ->with('success', 'Network switch updated successfully.');
     }
 
@@ -81,10 +83,23 @@ class NetworkSwitchController extends Controller
             ->with('success', 'Network switch deleted successfully.');
     }
 
-    public function walk(NetworkSwitch $networkSwitch)
+    public function walk(NetworkSwitch $networkSwitch): RedirectResponse
     {
-        WalkDeviceJob::dispatch($networkSwitch);
+        if ($networkSwitch->syncing) {
+            \Log::info('Switch is already syncing, returning error message');
+            return back()->with('error', 'This switch is currently being walked. Please wait for the current operation to complete.');
+        }
 
-        return back()->with('success', 'Network switch walk job has been queued.');
+        \Log::info('Starting walk for switch', ['host' => $networkSwitch->host]);
+        $networkSwitch->update(['syncing' => true]);
+
+        try {
+            WalkDeviceJob::dispatch($networkSwitch);
+            return back()->with('success', "Started walking switch {$networkSwitch->host}. This may take a few minutes to complete.");
+        } catch (Exception $e) {
+            $networkSwitch->syncing = false;
+            $networkSwitch->save();
+            return back()->with('error', 'Device sync failed: ' . $e->getMessage());
+        }
     }
 }

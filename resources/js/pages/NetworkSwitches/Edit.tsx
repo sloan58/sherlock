@@ -1,4 +1,6 @@
-import { Head, useForm, router } from '@inertiajs/react';
+import { Head, useForm, router, usePage } from '@inertiajs/react';
+import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -16,7 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, LoaderCircle } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
@@ -34,6 +36,7 @@ interface NetworkSwitch {
     password: string;
     device_type: keyof typeof deviceTypes;
     port: string;
+    syncing?: boolean;
 }
 
 interface Props extends PageProps {
@@ -48,6 +51,30 @@ export default function Edit({ switch: networkSwitch, ...props }: Props) {
         device_type: networkSwitch.device_type,
         port: networkSwitch.port,
     });
+
+    const { flash } = usePage().props as { flash?: { success?: string; error?: string } };
+
+    // Polling logic
+    const pollingRef = useRef<NodeJS.Timeout | null>(null);
+    const syncing = !!networkSwitch.syncing;
+
+    useEffect(() => {
+        if (syncing) {
+            pollingRef.current = setInterval(() => {
+                router.reload({ only: ['switch'] });
+            }, 5000);
+        }
+        return () => {
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
+            }
+        };
+    }, [syncing, networkSwitch.id]);
+
+    useEffect(() => {
+        if (flash?.success) toast.success(flash.success);
+        if (flash?.error) toast.error(flash.error);
+    }, [flash?.success, flash?.error]);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -196,13 +223,19 @@ export default function Edit({ switch: networkSwitch, ...props }: Props) {
                                     <Button
                                         type="button"
                                         variant="secondary"
+                                        disabled={!!networkSwitch.syncing}
                                         onClick={() => {
-                                            if (confirm('Are you sure you want to walk this device? This will update all device information.')) {
-                                                router.post(route('network-switches.walk', networkSwitch.id));
-                                            }
+                                            router.post(route('network-switches.walk', networkSwitch.id), { replace: true });
                                         }}
                                     >
-                                        Walk Device
+                                        {networkSwitch.syncing ? (
+                                            <>
+                                                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                                Walking Device...
+                                            </>
+                                        ) : (
+                                            'Walk Device'
+                                        )}
                                     </Button>
                                     <Button
                                         type="submit"
