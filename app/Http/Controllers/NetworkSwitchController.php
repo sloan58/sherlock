@@ -44,17 +44,26 @@ class NetworkSwitchController extends Controller
             ->with('success', 'Network switch created successfully.');
     }
 
-    public function show(NetworkSwitch $networkSwitch)
-    {
-        return Inertia::render('NetworkSwitches/Show', [
-            'switch' => $networkSwitch->load(['interfaces', 'macAddresses'])
-        ]);
-    }
-
     public function edit(NetworkSwitch $networkSwitch)
     {
+        $networkSwitch->load(['macAddresses' => function ($q) {
+            $q->withPivot([
+                'vlan_id',
+                'type',
+                'age',
+                'secure',
+                'ntfy',
+                'ports',
+                'manufacturer',
+                'comment',
+                'created_at',
+                'updated_at',
+            ]);
+        }]);
+
         return Inertia::render('NetworkSwitches/Edit', [
-            'switch' => $networkSwitch
+            'switch' => $networkSwitch,
+            'macAddresses' => $networkSwitch->macAddresses,
         ]);
     }
 

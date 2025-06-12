@@ -80,20 +80,6 @@ export default function Index({ switches, ...props }: Props) {
                                                 >
                                                     <Link
                                                         href={route(
-                                                            'network-switches.show',
-                                                            switch_.id
-                                                        )}
-                                                    >
-                                                        View
-                                                    </Link>
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    asChild
-                                                    className="mr-2"
-                                                >
-                                                    <Link
-                                                        href={route(
                                                             'network-switches.edit',
                                                             switch_.id
                                                         )}

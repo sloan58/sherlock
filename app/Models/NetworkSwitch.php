@@ -2,11 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\WalkDeviceJob;
-use App\Models\MacAddress;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use App\Models\NetworkInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

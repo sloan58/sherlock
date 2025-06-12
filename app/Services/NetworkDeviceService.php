@@ -104,7 +104,7 @@ class NetworkDeviceService
         // Execute Python script with JSON input
         $process = [
             base_path('lib/.venv/bin/python'),
-            base_path('lib/lookup_mac.py'),
+            base_path('lib/mac_lookup.py'),
         ];
 
         return $this->runCommand($process, $jsonInput);

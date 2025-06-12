@@ -1,0 +1,918 @@
+2025-06-11 15:45:03,639 - DEBUG - Raw input received: {"mac_address":"000c.29d8.42c7"}
+2025-06-11 15:45:03,639 - DEBUG - Parsed input data: {
+  "mac_address": "000c.29d8.42c7"
+}
+2025-06-11 15:45:03,711 - DEBUG - Looking up MAC address: 000c.29d8.42c7
+2025-06-11 15:45:03,711 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:03,924 - DEBUG - Raw input received: {"mac_address":"0050.5695.0879"}
+2025-06-11 15:45:03,924 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.0879"
+}
+2025-06-11 15:45:03,991 - DEBUG - Looking up MAC address: 0050.5695.0879
+2025-06-11 15:45:03,992 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:04,216 - DEBUG - Raw input received: {"mac_address":"0050.5695.08ae"}
+2025-06-11 15:45:04,216 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.08ae"
+}
+2025-06-11 15:45:04,285 - DEBUG - Looking up MAC address: 0050.5695.08ae
+2025-06-11 15:45:04,285 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:04,500 - DEBUG - Raw input received: {"mac_address":"0050.5695.1834"}
+2025-06-11 15:45:04,500 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.1834"
+}
+2025-06-11 15:45:04,568 - DEBUG - Looking up MAC address: 0050.5695.1834
+2025-06-11 15:45:04,568 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:04,785 - DEBUG - Raw input received: {"mac_address":"0050.5695.1b6f"}
+2025-06-11 15:45:04,785 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.1b6f"
+}
+2025-06-11 15:45:04,853 - DEBUG - Looking up MAC address: 0050.5695.1b6f
+2025-06-11 15:45:04,853 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:05,070 - DEBUG - Raw input received: {"mac_address":"0050.5695.2572"}
+2025-06-11 15:45:05,070 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.2572"
+}
+2025-06-11 15:45:05,142 - DEBUG - Looking up MAC address: 0050.5695.2572
+2025-06-11 15:45:05,142 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:05,360 - DEBUG - Raw input received: {"mac_address":"0050.5695.2654"}
+2025-06-11 15:45:05,360 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.2654"
+}
+2025-06-11 15:45:05,429 - DEBUG - Looking up MAC address: 0050.5695.2654
+2025-06-11 15:45:05,429 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:05,641 - DEBUG - Raw input received: {"mac_address":"0050.5695.38a3"}
+2025-06-11 15:45:05,641 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.38a3"
+}
+2025-06-11 15:45:05,709 - DEBUG - Looking up MAC address: 0050.5695.38a3
+2025-06-11 15:45:05,709 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:05,924 - DEBUG - Raw input received: {"mac_address":"0050.5695.4295"}
+2025-06-11 15:45:05,924 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.4295"
+}
+2025-06-11 15:45:05,992 - DEBUG - Looking up MAC address: 0050.5695.4295
+2025-06-11 15:45:05,992 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:06,221 - DEBUG - Raw input received: {"mac_address":"0050.5695.4409"}
+2025-06-11 15:45:06,221 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.4409"
+}
+2025-06-11 15:45:06,289 - DEBUG - Looking up MAC address: 0050.5695.4409
+2025-06-11 15:45:06,289 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:06,497 - DEBUG - Raw input received: {"mac_address":"0050.5695.4ce0"}
+2025-06-11 15:45:06,497 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.4ce0"
+}
+2025-06-11 15:45:06,565 - DEBUG - Looking up MAC address: 0050.5695.4ce0
+2025-06-11 15:45:06,565 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:06,779 - DEBUG - Raw input received: {"mac_address":"0050.5695.5715"}
+2025-06-11 15:45:06,779 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.5715"
+}
+2025-06-11 15:45:06,847 - DEBUG - Looking up MAC address: 0050.5695.5715
+2025-06-11 15:45:06,847 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:07,071 - DEBUG - Raw input received: {"mac_address":"0050.5695.60a0"}
+2025-06-11 15:45:07,072 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.60a0"
+}
+2025-06-11 15:45:07,143 - DEBUG - Looking up MAC address: 0050.5695.60a0
+2025-06-11 15:45:07,143 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:07,359 - DEBUG - Raw input received: {"mac_address":"0050.5695.6787"}
+2025-06-11 15:45:07,359 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.6787"
+}
+2025-06-11 15:45:07,430 - DEBUG - Looking up MAC address: 0050.5695.6787
+2025-06-11 15:45:07,430 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:07,638 - DEBUG - Raw input received: {"mac_address":"0050.5695.6f9f"}
+2025-06-11 15:45:07,638 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.6f9f"
+}
+2025-06-11 15:45:07,706 - DEBUG - Looking up MAC address: 0050.5695.6f9f
+2025-06-11 15:45:07,706 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:07,920 - DEBUG - Raw input received: {"mac_address":"0050.5695.771a"}
+2025-06-11 15:45:07,920 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.771a"
+}
+2025-06-11 15:45:07,989 - DEBUG - Looking up MAC address: 0050.5695.771a
+2025-06-11 15:45:07,989 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:08,212 - DEBUG - Raw input received: {"mac_address":"0050.5695.79ee"}
+2025-06-11 15:45:08,212 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.79ee"
+}
+2025-06-11 15:45:08,281 - DEBUG - Looking up MAC address: 0050.5695.79ee
+2025-06-11 15:45:08,281 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:08,495 - DEBUG - Raw input received: {"mac_address":"0050.5695.b4d4"}
+2025-06-11 15:45:08,495 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.b4d4"
+}
+2025-06-11 15:45:08,563 - DEBUG - Looking up MAC address: 0050.5695.b4d4
+2025-06-11 15:45:08,563 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:08,781 - DEBUG - Raw input received: {"mac_address":"0050.5695.b8b3"}
+2025-06-11 15:45:08,781 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.b8b3"
+}
+2025-06-11 15:45:08,849 - DEBUG - Looking up MAC address: 0050.5695.b8b3
+2025-06-11 15:45:08,850 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:09,061 - DEBUG - Raw input received: {"mac_address":"0050.5695.dc9c"}
+2025-06-11 15:45:09,061 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.dc9c"
+}
+2025-06-11 15:45:09,132 - DEBUG - Looking up MAC address: 0050.5695.dc9c
+2025-06-11 15:45:09,132 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:09,347 - DEBUG - Raw input received: {"mac_address":"0050.5695.f9c2"}
+2025-06-11 15:45:09,347 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.f9c2"
+}
+2025-06-11 15:45:09,415 - DEBUG - Looking up MAC address: 0050.5695.f9c2
+2025-06-11 15:45:09,415 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:09,625 - DEBUG - Raw input received: {"mac_address":"0050.5698.03ed"}
+2025-06-11 15:45:09,625 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5698.03ed"
+}
+2025-06-11 15:45:09,693 - DEBUG - Looking up MAC address: 0050.5698.03ed
+2025-06-11 15:45:09,693 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:09,905 - DEBUG - Raw input received: {"mac_address":"0050.5698.0b96"}
+2025-06-11 15:45:09,905 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5698.0b96"
+}
+2025-06-11 15:45:09,973 - DEBUG - Looking up MAC address: 0050.5698.0b96
+2025-06-11 15:45:09,973 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:10,195 - DEBUG - Raw input received: {"mac_address":"0050.5698.e4df"}
+2025-06-11 15:45:10,196 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5698.e4df"
+}
+2025-06-11 15:45:10,265 - DEBUG - Looking up MAC address: 0050.5698.e4df
+2025-06-11 15:45:10,265 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:10,484 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:10,484 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:10,553 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:10,553 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:10,774 - DEBUG - Raw input received: {"mac_address":"0050.5695.0212"}
+2025-06-11 15:45:10,774 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.0212"
+}
+2025-06-11 15:45:10,842 - DEBUG - Looking up MAC address: 0050.5695.0212
+2025-06-11 15:45:10,842 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:11,064 - DEBUG - Raw input received: {"mac_address":"0050.5695.1d96"}
+2025-06-11 15:45:11,064 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.1d96"
+}
+2025-06-11 15:45:11,136 - DEBUG - Looking up MAC address: 0050.5695.1d96
+2025-06-11 15:45:11,136 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:11,351 - DEBUG - Raw input received: {"mac_address":"0050.5695.3369"}
+2025-06-11 15:45:11,351 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.3369"
+}
+2025-06-11 15:45:11,421 - DEBUG - Looking up MAC address: 0050.5695.3369
+2025-06-11 15:45:11,421 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:11,643 - DEBUG - Raw input received: {"mac_address":"0050.5695.4bd0"}
+2025-06-11 15:45:11,643 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.4bd0"
+}
+2025-06-11 15:45:11,712 - DEBUG - Looking up MAC address: 0050.5695.4bd0
+2025-06-11 15:45:11,712 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:11,918 - DEBUG - Raw input received: {"mac_address":"0050.5695.7079"}
+2025-06-11 15:45:11,919 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.7079"
+}
+2025-06-11 15:45:11,990 - DEBUG - Looking up MAC address: 0050.5695.7079
+2025-06-11 15:45:11,990 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:12,224 - DEBUG - Raw input received: {"mac_address":"0050.5698.33e3"}
+2025-06-11 15:45:12,224 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5698.33e3"
+}
+2025-06-11 15:45:12,295 - DEBUG - Looking up MAC address: 0050.5698.33e3
+2025-06-11 15:45:12,295 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:12,516 - DEBUG - Raw input received: {"mac_address":"0050.5698.7baf"}
+2025-06-11 15:45:12,516 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5698.7baf"
+}
+2025-06-11 15:45:12,583 - DEBUG - Looking up MAC address: 0050.5698.7baf
+2025-06-11 15:45:12,583 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:12,808 - DEBUG - Raw input received: {"mac_address":"5897.bd05.050c"}
+2025-06-11 15:45:12,808 - DEBUG - Parsed input data: {
+  "mac_address": "5897.bd05.050c"
+}
+2025-06-11 15:45:12,877 - DEBUG - Looking up MAC address: 5897.bd05.050c
+2025-06-11 15:45:12,877 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:13,095 - DEBUG - Raw input received: {"mac_address":"0017.a477.1400"}
+2025-06-11 15:45:13,095 - DEBUG - Parsed input data: {
+  "mac_address": "0017.a477.1400"
+}
+2025-06-11 15:45:13,166 - DEBUG - Looking up MAC address: 0017.a477.1400
+2025-06-11 15:45:13,166 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:13,381 - DEBUG - Raw input received: {"mac_address":"0017.a477.1d6b"}
+2025-06-11 15:45:13,381 - DEBUG - Parsed input data: {
+  "mac_address": "0017.a477.1d6b"
+}
+2025-06-11 15:45:13,449 - DEBUG - Looking up MAC address: 0017.a477.1d6b
+2025-06-11 15:45:13,449 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:13,659 - DEBUG - Raw input received: {"mac_address":"001c.5745.d9c1"}
+2025-06-11 15:45:13,659 - DEBUG - Parsed input data: {
+  "mac_address": "001c.5745.d9c1"
+}
+2025-06-11 15:45:13,726 - DEBUG - Looking up MAC address: 001c.5745.d9c1
+2025-06-11 15:45:13,727 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:13,940 - DEBUG - Raw input received: {"mac_address":"0050.5668.e966"}
+2025-06-11 15:45:13,940 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5668.e966"
+}
+2025-06-11 15:45:14,008 - DEBUG - Looking up MAC address: 0050.5668.e966
+2025-06-11 15:45:14,008 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:14,219 - DEBUG - Raw input received: {"mac_address":"2880.23dd.c398"}
+2025-06-11 15:45:14,219 - DEBUG - Parsed input data: {
+  "mac_address": "2880.23dd.c398"
+}
+2025-06-11 15:45:14,288 - DEBUG - Looking up MAC address: 2880.23dd.c398
+2025-06-11 15:45:14,288 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:14,500 - DEBUG - Raw input received: {"mac_address":"2880.23dd.c39c"}
+2025-06-11 15:45:14,500 - DEBUG - Parsed input data: {
+  "mac_address": "2880.23dd.c39c"
+}
+2025-06-11 15:45:14,569 - DEBUG - Looking up MAC address: 2880.23dd.c39c
+2025-06-11 15:45:14,569 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:14,791 - DEBUG - Raw input received: {"mac_address":"38ea.a776.83c0"}
+2025-06-11 15:45:14,791 - DEBUG - Parsed input data: {
+  "mac_address": "38ea.a776.83c0"
+}
+2025-06-11 15:45:14,858 - DEBUG - Looking up MAC address: 38ea.a776.83c0
+2025-06-11 15:45:14,858 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:15,071 - DEBUG - Raw input received: {"mac_address":"4c4e.3544.0b34"}
+2025-06-11 15:45:15,071 - DEBUG - Parsed input data: {
+  "mac_address": "4c4e.3544.0b34"
+}
+2025-06-11 15:45:15,142 - DEBUG - Looking up MAC address: 4c4e.3544.0b34
+2025-06-11 15:45:15,143 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:15,355 - DEBUG - Raw input received: {"mac_address":"5820.b186.dd88"}
+2025-06-11 15:45:15,355 - DEBUG - Parsed input data: {
+  "mac_address": "5820.b186.dd88"
+}
+2025-06-11 15:45:15,424 - DEBUG - Looking up MAC address: 5820.b186.dd88
+2025-06-11 15:45:15,424 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:15,631 - DEBUG - Raw input received: {"mac_address":"5820.b186.dd8c"}
+2025-06-11 15:45:15,631 - DEBUG - Parsed input data: {
+  "mac_address": "5820.b186.dd8c"
+}
+2025-06-11 15:45:15,700 - DEBUG - Looking up MAC address: 5820.b186.dd8c
+2025-06-11 15:45:15,700 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:15,918 - DEBUG - Raw input received: {"mac_address":"5849.3bf4.1f6e"}
+2025-06-11 15:45:15,918 - DEBUG - Parsed input data: {
+  "mac_address": "5849.3bf4.1f6e"
+}
+2025-06-11 15:45:15,988 - DEBUG - Looking up MAC address: 5849.3bf4.1f6e
+2025-06-11 15:45:15,988 - DEBUG - Lookup result: {
+  "manufacturer": "PaloAlto",
+  "comment": null
+}
+2025-06-11 15:45:16,216 - DEBUG - Raw input received: {"mac_address":"70ca.9b03.ba6c"}
+2025-06-11 15:45:16,216 - DEBUG - Parsed input data: {
+  "mac_address": "70ca.9b03.ba6c"
+}
+2025-06-11 15:45:16,285 - DEBUG - Looking up MAC address: 70ca.9b03.ba6c
+2025-06-11 15:45:16,285 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:16,498 - DEBUG - Raw input received: {"mac_address":"885a.9287.db4e"}
+2025-06-11 15:45:16,498 - DEBUG - Parsed input data: {
+  "mac_address": "885a.9287.db4e"
+}
+2025-06-11 15:45:16,566 - DEBUG - Looking up MAC address: 885a.9287.db4e
+2025-06-11 15:45:16,567 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:16,779 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:16,779 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:16,847 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:16,847 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:17,059 - DEBUG - Raw input received: {"mac_address":"001b.1700.011a"}
+2025-06-11 15:45:17,060 - DEBUG - Parsed input data: {
+  "mac_address": "001b.1700.011a"
+}
+2025-06-11 15:45:17,131 - DEBUG - Looking up MAC address: 001b.1700.011a
+2025-06-11 15:45:17,131 - DEBUG - Lookup result: {
+  "manufacturer": "PaloAlto",
+  "comment": null
+}
+2025-06-11 15:45:17,344 - DEBUG - Raw input received: {"mac_address":"6c5e.3bad.36d7"}
+2025-06-11 15:45:17,344 - DEBUG - Parsed input data: {
+  "mac_address": "6c5e.3bad.36d7"
+}
+2025-06-11 15:45:17,413 - DEBUG - Looking up MAC address: 6c5e.3bad.36d7
+2025-06-11 15:45:17,413 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:17,625 - DEBUG - Raw input received: {"mac_address":"0050.5695.047c"}
+2025-06-11 15:45:17,625 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.047c"
+}
+2025-06-11 15:45:17,693 - DEBUG - Looking up MAC address: 0050.5695.047c
+2025-06-11 15:45:17,693 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:17,905 - DEBUG - Raw input received: {"mac_address":"0050.5695.8f3e"}
+2025-06-11 15:45:17,905 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.8f3e"
+}
+2025-06-11 15:45:17,974 - DEBUG - Looking up MAC address: 0050.5695.8f3e
+2025-06-11 15:45:17,974 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:18,199 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:18,199 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:18,269 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:18,269 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:18,482 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:18,482 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:18,550 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:18,550 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:18,765 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:18,765 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:18,832 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:18,832 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:19,042 - DEBUG - Raw input received: {"mac_address":"2c4f.5295.94d0"}
+2025-06-11 15:45:19,042 - DEBUG - Parsed input data: {
+  "mac_address": "2c4f.5295.94d0"
+}
+2025-06-11 15:45:19,112 - DEBUG - Looking up MAC address: 2c4f.5295.94d0
+2025-06-11 15:45:19,112 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:19,323 - DEBUG - Raw input received: {"mac_address":"34f8.e734.5c00"}
+2025-06-11 15:45:19,323 - DEBUG - Parsed input data: {
+  "mac_address": "34f8.e734.5c00"
+}
+2025-06-11 15:45:19,392 - DEBUG - Looking up MAC address: 34f8.e734.5c00
+2025-06-11 15:45:19,392 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:19,605 - DEBUG - Raw input received: {"mac_address":"34f8.e7f0.8b00"}
+2025-06-11 15:45:19,605 - DEBUG - Parsed input data: {
+  "mac_address": "34f8.e7f0.8b00"
+}
+2025-06-11 15:45:19,673 - DEBUG - Looking up MAC address: 34f8.e7f0.8b00
+2025-06-11 15:45:19,673 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:19,887 - DEBUG - Raw input received: {"mac_address":"6416.8dbd.68c1"}
+2025-06-11 15:45:19,887 - DEBUG - Parsed input data: {
+  "mac_address": "6416.8dbd.68c1"
+}
+2025-06-11 15:45:19,956 - DEBUG - Looking up MAC address: 6416.8dbd.68c1
+2025-06-11 15:45:19,956 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:20,176 - DEBUG - Raw input received: {"mac_address":"6c5e.3bad.3681"}
+2025-06-11 15:45:20,176 - DEBUG - Parsed input data: {
+  "mac_address": "6c5e.3bad.3681"
+}
+2025-06-11 15:45:20,245 - DEBUG - Looking up MAC address: 6c5e.3bad.3681
+2025-06-11 15:45:20,246 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:20,458 - DEBUG - Raw input received: {"mac_address":"70db.9833.f000"}
+2025-06-11 15:45:20,458 - DEBUG - Parsed input data: {
+  "mac_address": "70db.9833.f000"
+}
+2025-06-11 15:45:20,526 - DEBUG - Looking up MAC address: 70db.9833.f000
+2025-06-11 15:45:20,526 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:20,740 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:20,740 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:20,809 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:20,809 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:21,031 - DEBUG - Raw input received: {"mac_address":"c4f7.d5d5.f1fc"}
+2025-06-11 15:45:21,031 - DEBUG - Parsed input data: {
+  "mac_address": "c4f7.d5d5.f1fc"
+}
+2025-06-11 15:45:21,106 - DEBUG - Looking up MAC address: c4f7.d5d5.f1fc
+2025-06-11 15:45:21,106 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:21,324 - DEBUG - Raw input received: {"mac_address":"d89d.672a.a290"}
+2025-06-11 15:45:21,324 - DEBUG - Parsed input data: {
+  "mac_address": "d89d.672a.a290"
+}
+2025-06-11 15:45:21,393 - DEBUG - Looking up MAC address: d89d.672a.a290
+2025-06-11 15:45:21,393 - DEBUG - Lookup result: {
+  "manufacturer": "HewlettP",
+  "comment": null
+}
+2025-06-11 15:45:21,610 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:21,610 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:21,678 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:21,679 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:21,890 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:21,890 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:21,959 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:21,959 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:22,182 - DEBUG - Raw input received: {"mac_address":"2c33.11f2.9240"}
+2025-06-11 15:45:22,182 - DEBUG - Parsed input data: {
+  "mac_address": "2c33.11f2.9240"
+}
+2025-06-11 15:45:22,251 - DEBUG - Looking up MAC address: 2c33.11f2.9240
+2025-06-11 15:45:22,251 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:22,465 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:22,465 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:22,533 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:22,533 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:22,745 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:22,745 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:22,813 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:22,813 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:23,032 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:23,032 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:23,104 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:23,104 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:23,319 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:23,319 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:23,387 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:23,387 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:23,602 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:23,602 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:23,672 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:23,672 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:23,887 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:23,887 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:23,957 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:23,957 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:24,182 - DEBUG - Raw input received: {"mac_address":"00a3.8ed9.5f7f"}
+2025-06-11 15:45:24,183 - DEBUG - Parsed input data: {
+  "mac_address": "00a3.8ed9.5f7f"
+}
+2025-06-11 15:45:24,253 - DEBUG - Looking up MAC address: 00a3.8ed9.5f7f
+2025-06-11 15:45:24,253 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:24,468 - DEBUG - Raw input received: {"mac_address":"00a3.8ed9.7a7f"}
+2025-06-11 15:45:24,468 - DEBUG - Parsed input data: {
+  "mac_address": "00a3.8ed9.7a7f"
+}
+2025-06-11 15:45:24,536 - DEBUG - Looking up MAC address: 00a3.8ed9.7a7f
+2025-06-11 15:45:24,536 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:24,746 - DEBUG - Raw input received: {"mac_address":"00c1.b130.827f"}
+2025-06-11 15:45:24,746 - DEBUG - Parsed input data: {
+  "mac_address": "00c1.b130.827f"
+}
+2025-06-11 15:45:24,815 - DEBUG - Looking up MAC address: 00c1.b130.827f
+2025-06-11 15:45:24,815 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:25,027 - DEBUG - Raw input received: {"mac_address":"00c1.b131.8f5f"}
+2025-06-11 15:45:25,027 - DEBUG - Parsed input data: {
+  "mac_address": "00c1.b131.8f5f"
+}
+2025-06-11 15:45:25,096 - DEBUG - Looking up MAC address: 00c1.b131.8f5f
+2025-06-11 15:45:25,096 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:25,313 - DEBUG - Raw input received: {"mac_address":"00c1.b17e.b36f"}
+2025-06-11 15:45:25,313 - DEBUG - Parsed input data: {
+  "mac_address": "00c1.b17e.b36f"
+}
+2025-06-11 15:45:25,381 - DEBUG - Looking up MAC address: 00c1.b17e.b36f
+2025-06-11 15:45:25,381 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:25,578 - DEBUG - Raw input received: {"mac_address":"00c1.b17f.355f"}
+2025-06-11 15:45:25,578 - DEBUG - Parsed input data: {
+  "mac_address": "00c1.b17f.355f"
+}
+2025-06-11 15:45:25,646 - DEBUG - Looking up MAC address: 00c1.b17f.355f
+2025-06-11 15:45:25,646 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:25,847 - DEBUG - Raw input received: {"mac_address":"188b.9d43.3c4f"}
+2025-06-11 15:45:25,847 - DEBUG - Parsed input data: {
+  "mac_address": "188b.9d43.3c4f"
+}
+2025-06-11 15:45:25,915 - DEBUG - Looking up MAC address: 188b.9d43.3c4f
+2025-06-11 15:45:25,916 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:26,144 - DEBUG - Raw input received: {"mac_address":"188b.9d43.3e8f"}
+2025-06-11 15:45:26,144 - DEBUG - Parsed input data: {
+  "mac_address": "188b.9d43.3e8f"
+}
+2025-06-11 15:45:26,214 - DEBUG - Looking up MAC address: 188b.9d43.3e8f
+2025-06-11 15:45:26,214 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:26,423 - DEBUG - Raw input received: {"mac_address":"a023.9f48.1180"}
+2025-06-11 15:45:26,424 - DEBUG - Parsed input data: {
+  "mac_address": "a023.9f48.1180"
+}
+2025-06-11 15:45:26,492 - DEBUG - Looking up MAC address: a023.9f48.1180
+2025-06-11 15:45:26,492 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:26,710 - DEBUG - Raw input received: {"mac_address":"a023.9f5b.c400"}
+2025-06-11 15:45:26,710 - DEBUG - Parsed input data: {
+  "mac_address": "a023.9f5b.c400"
+}
+2025-06-11 15:45:26,779 - DEBUG - Looking up MAC address: a023.9f5b.c400
+2025-06-11 15:45:26,779 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:26,980 - DEBUG - Raw input received: {"mac_address":"a023.9f67.9000"}
+2025-06-11 15:45:26,981 - DEBUG - Parsed input data: {
+  "mac_address": "a023.9f67.9000"
+}
+2025-06-11 15:45:27,049 - DEBUG - Looking up MAC address: a023.9f67.9000
+2025-06-11 15:45:27,049 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:27,292 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:27,293 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:27,363 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:27,363 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:27,574 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:27,574 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:27,643 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:27,643 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:27,867 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:27,867 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:27,936 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:27,936 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:28,164 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:28,164 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:28,233 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:28,233 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:28,447 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:28,447 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:28,514 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:28,515 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:28,733 - DEBUG - Raw input received: {"mac_address":"30e4.db47.46c1"}
+2025-06-11 15:45:28,733 - DEBUG - Parsed input data: {
+  "mac_address": "30e4.db47.46c1"
+}
+2025-06-11 15:45:28,801 - DEBUG - Looking up MAC address: 30e4.db47.46c1
+2025-06-11 15:45:28,801 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:29,027 - DEBUG - Raw input received: {"mac_address":"4014.82d5.2701"}
+2025-06-11 15:45:29,027 - DEBUG - Parsed input data: {
+  "mac_address": "4014.82d5.2701"
+}
+2025-06-11 15:45:29,097 - DEBUG - Looking up MAC address: 4014.82d5.2701
+2025-06-11 15:45:29,097 - DEBUG - Lookup result: {
+  "manufacturer": null,
+  "comment": null
+}
+2025-06-11 15:45:29,321 - DEBUG - Raw input received: {"mac_address":"481b.a4ea.1b80"}
+2025-06-11 15:45:29,321 - DEBUG - Parsed input data: {
+  "mac_address": "481b.a4ea.1b80"
+}
+2025-06-11 15:45:29,389 - DEBUG - Looking up MAC address: 481b.a4ea.1b80
+2025-06-11 15:45:29,389 - DEBUG - Lookup result: {
+  "manufacturer": null,
+  "comment": null
+}
+2025-06-11 15:45:29,603 - DEBUG - Raw input received: {"mac_address":"481b.a4ea.1b82"}
+2025-06-11 15:45:29,603 - DEBUG - Parsed input data: {
+  "mac_address": "481b.a4ea.1b82"
+}
+2025-06-11 15:45:29,672 - DEBUG - Looking up MAC address: 481b.a4ea.1b82
+2025-06-11 15:45:29,672 - DEBUG - Lookup result: {
+  "manufacturer": null,
+  "comment": null
+}
+2025-06-11 15:45:29,888 - DEBUG - Raw input received: {"mac_address":"68e5.9ebf.2182"}
+2025-06-11 15:45:29,889 - DEBUG - Parsed input data: {
+  "mac_address": "68e5.9ebf.2182"
+}
+2025-06-11 15:45:29,958 - DEBUG - Looking up MAC address: 68e5.9ebf.2182
+2025-06-11 15:45:29,958 - DEBUG - Lookup result: {
+  "manufacturer": null,
+  "comment": null
+}
+2025-06-11 15:45:30,189 - DEBUG - Raw input received: {"mac_address":"6c03.b542.1281"}
+2025-06-11 15:45:30,189 - DEBUG - Parsed input data: {
+  "mac_address": "6c03.b542.1281"
+}
+2025-06-11 15:45:30,258 - DEBUG - Looking up MAC address: 6c03.b542.1281
+2025-06-11 15:45:30,258 - DEBUG - Lookup result: {
+  "manufacturer": null,
+  "comment": null
+}
+2025-06-11 15:45:30,468 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:30,468 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:30,537 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:30,537 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:30,750 - DEBUG - Raw input received: {"mac_address":"0050.5695.88bb"}
+2025-06-11 15:45:30,750 - DEBUG - Parsed input data: {
+  "mac_address": "0050.5695.88bb"
+}
+2025-06-11 15:45:30,819 - DEBUG - Looking up MAC address: 0050.5695.88bb
+2025-06-11 15:45:30,819 - DEBUG - Lookup result: {
+  "manufacturer": "VMware",
+  "comment": null
+}
+2025-06-11 15:45:31,039 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:31,039 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:31,112 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:31,112 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:31,330 - DEBUG - Raw input received: {"mac_address":"bc16.65b3.d948"}
+2025-06-11 15:45:31,330 - DEBUG - Parsed input data: {
+  "mac_address": "bc16.65b3.d948"
+}
+2025-06-11 15:45:31,399 - DEBUG - Looking up MAC address: bc16.65b3.d948
+2025-06-11 15:45:31,399 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:31,612 - DEBUG - Raw input received: {"mac_address":"74a0.2f3f.e335"}
+2025-06-11 15:45:31,612 - DEBUG - Parsed input data: {
+  "mac_address": "74a0.2f3f.e335"
+}
+2025-06-11 15:45:31,681 - DEBUG - Looking up MAC address: 74a0.2f3f.e335
+2025-06-11 15:45:31,681 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:31,895 - DEBUG - Raw input received: {"mac_address":"74a0.2f3f.e336"}
+2025-06-11 15:45:31,895 - DEBUG - Parsed input data: {
+  "mac_address": "74a0.2f3f.e336"
+}
+2025-06-11 15:45:31,965 - DEBUG - Looking up MAC address: 74a0.2f3f.e336
+2025-06-11 15:45:31,965 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:32,200 - DEBUG - Raw input received: {"mac_address":"74a0.2f92.0ad5"}
+2025-06-11 15:45:32,200 - DEBUG - Parsed input data: {
+  "mac_address": "74a0.2f92.0ad5"
+}
+2025-06-11 15:45:32,269 - DEBUG - Looking up MAC address: 74a0.2f92.0ad5
+2025-06-11 15:45:32,269 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
+2025-06-11 15:45:32,484 - DEBUG - Raw input received: {"mac_address":"74a0.2f92.0ad6"}
+2025-06-11 15:45:32,484 - DEBUG - Parsed input data: {
+  "mac_address": "74a0.2f92.0ad6"
+}
+2025-06-11 15:45:32,553 - DEBUG - Looking up MAC address: 74a0.2f92.0ad6
+2025-06-11 15:45:32,553 - DEBUG - Lookup result: {
+  "manufacturer": "Cisco",
+  "comment": null
+}
