@@ -36,12 +36,7 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
 done
 #
 ## Run migrations
-#php artisan migrate --force
-php artisan db:seed --class=RoleSeeder --force
-php artisan db:seed --class=AdminUserSeeder --force
-
-# Add the PRD Sites
-php artisan sites:import
+php artisan migrate --force
 
 # Start cron
 service cron start
