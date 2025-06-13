@@ -3,6 +3,7 @@
 import sys
 import json
 import logging
+import os
 from CiscoInterfaceNameConverter import converter
 from netmiko import ConnectHandler, NetmikoAuthenticationException, NetmikoTimeoutException
 
@@ -11,7 +12,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('netmiko_command_debug.log'),
+        logging.FileHandler(os.path.join(os.path.dirname(__file__), 'logs', 'netmiko_command_debug.log')),
         logging.StreamHandler(sys.stderr)
     ]
 )
@@ -63,4 +64,6 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
+    # Ensure logs directory exists
+    os.makedirs(os.path.join(os.path.dirname(__file__), 'logs'), exist_ok=True)
     main()

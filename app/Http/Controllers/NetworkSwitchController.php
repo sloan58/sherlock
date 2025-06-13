@@ -46,24 +46,30 @@ class NetworkSwitchController extends Controller
 
     public function edit(NetworkSwitch $networkSwitch)
     {
-        $networkSwitch->load(['macAddresses' => function ($q) {
-            $q->withPivot([
-                'vlan_id',
-                'type',
-                'age',
-                'secure',
-                'ntfy',
-                'ports',
-                'manufacturer',
-                'comment',
-                'created_at',
-                'updated_at',
-            ]);
-        }]);
+        $networkSwitch->load([
+            'visibleMacAddresses' => function ($q) {
+                $q->withPivot([
+                    'vlan_id',
+                    'type',
+                    'age',
+                    'secure',
+                    'ntfy',
+                    'ports',
+                    'manufacturer',
+                    'comment',
+                    'created_at',
+                    'updated_at',
+                ]);
+            },
+            'interfaces',
+        ]);
+
+        $switchArray = $networkSwitch->toArray();
+        $switchArray['interfaces'] = $networkSwitch->interfaces->toArray();
 
         return Inertia::render('NetworkSwitches/Edit', [
-            'switch' => $networkSwitch,
-            'macAddresses' => $networkSwitch->macAddresses,
+            'switch' => $switchArray,
+            'macAddresses' => $networkSwitch->visibleMacAddresses,
         ]);
     }
 
@@ -110,5 +116,38 @@ class NetworkSwitchController extends Controller
             $networkSwitch->save();
             return back()->with('error', 'Device sync failed: ' . $e->getMessage());
         }
+    }
+
+    public function walkDevice(NetworkSwitch $networkSwitch)
+    {
+        try {
+            $networkSwitch->update(['syncing' => true]);
+            WalkDeviceJob::dispatch($networkSwitch);
+            
+            return response()->json([
+                'message' => 'Device walk started successfully',
+            ]);
+        } catch (\Exception $e) {
+            $networkSwitch->update(['syncing' => false]);
+            
+            $networkSwitch->syncHistory()->create([
+                'result' => 'failed',
+                'error_message' => $e->getMessage(),
+                'completed_at' => now(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to start device walk: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getSyncHistory(NetworkSwitch $networkSwitch)
+    {
+        return response()->json(
+            $networkSwitch->syncHistory()
+                ->orderBy('completed_at', 'desc')
+                ->get()
+        );
     }
 }

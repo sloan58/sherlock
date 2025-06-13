@@ -1,5 +1,5 @@
 import { Head, useForm, router, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, Loader2 } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
@@ -29,6 +29,15 @@ import {
     TabsList,
     TabsTrigger,
 } from '@/components/ui/tabs';
+import { SyncHistoryTable } from '@/components/NetworkSwitches/SyncHistoryTable';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',
@@ -43,6 +52,8 @@ interface NetworkSwitch {
     password: string;
     device_type: keyof typeof deviceTypes;
     port: string;
+    syncing: boolean;
+    interfaces?: never[];
 }
 
 interface MacAddress {
@@ -68,13 +79,32 @@ interface Props extends PageProps {
     macAddresses: MacAddress[];
 }
 
-export default function Edit({ switch: networkSwitch, macAddresses, ...props }: Props) {
+export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
+    const [switchData, setSwitchData] = useState(networkSwitch);
+
+    useEffect(() => {
+        // Only poll if the switch is syncing
+        if (switchData.syncing) {
+            const interval = setInterval(() => {
+                router.reload({
+                    only: ['switch'],
+                });
+            }, 2000);
+            return () => clearInterval(interval);
+        }
+    }, [switchData.syncing]);
+
+    // Update switchData when networkSwitch changes
+    useEffect(() => {
+        setSwitchData(networkSwitch);
+    }, [networkSwitch]);
+
     const { data, setData, put, processing, errors } = useForm({
-        host: networkSwitch.host,
-        username: networkSwitch.username,
-        password: networkSwitch.password,
-        device_type: networkSwitch.device_type,
-        port: networkSwitch.port,
+        host: switchData.host,
+        username: switchData.username,
+        password: switchData.password,
+        device_type: switchData.device_type,
+        port: switchData.port,
     });
 
     const { flash } = usePage().props as { flash?: { success?: string; error?: string } };
@@ -86,7 +116,18 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('network-switches.update', networkSwitch.id));
+        put(route('network-switches.update', switchData.id));
+    };
+
+    const walkDevice = () => {
+        router.post(
+            route('network-switches.walk', switchData.id),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
     };
 
     return (
@@ -94,19 +135,12 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
             <Head title="Edit Network Switch" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <Tabs defaultValue="device" className="w-full">
                         <TabsList>
-                            <TabsTrigger
-                                value="device"
-                            >
-                                Device Details
-                            </TabsTrigger>
-                            <TabsTrigger
-                                value="macs"
-                            >
-                                MAC Addresses
-                            </TabsTrigger>
+                            <TabsTrigger value="device">Device Details</TabsTrigger>
+                            <TabsTrigger value="macs">MAC Addresses</TabsTrigger>
+                            <TabsTrigger value="interfaces">Interfaces</TabsTrigger>
                         </TabsList>
                         <TabsContent value="device">
                             <Card>
@@ -122,7 +156,7 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
                                                     <TooltipProvider>
                                                         <Tooltip>
                                                             <TooltipTrigger>
-                                                                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                                                                <HelpCircle className="text-muted-foreground h-4 w-4" />
                                                             </TooltipTrigger>
                                                             <TooltipContent>
                                                                 <p>The FQDN or IP address of the device</p>
@@ -134,16 +168,10 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
                                                     id="host"
                                                     type="text"
                                                     value={data.host}
-                                                    onChange={(e) =>
-                                                        setData('host', e.target.value)
-                                                    }
+                                                    onChange={(e) => setData('host', e.target.value)}
                                                     required
                                                 />
-                                                {errors.host && (
-                                                    <p className="text-sm text-red-500">
-                                                        {errors.host}
-                                                    </p>
-                                                )}
+                                                {errors.host && <p className="text-sm text-red-500">{errors.host}</p>}
                                             </div>
 
                                             <div className="space-y-2">
@@ -152,16 +180,10 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
                                                     id="username"
                                                     type="text"
                                                     value={data.username}
-                                                    onChange={(e) =>
-                                                        setData('username', e.target.value)
-                                                    }
+                                                    onChange={(e) => setData('username', e.target.value)}
                                                     required
                                                 />
-                                                {errors.username && (
-                                                    <p className="text-sm text-red-500">
-                                                        {errors.username}
-                                                    </p>
-                                                )}
+                                                {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
                                             </div>
 
                                             <div className="space-y-2">
@@ -170,95 +192,62 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
                                                     id="password"
                                                     type="password"
                                                     value={data.password}
-                                                    onChange={(e) =>
-                                                        setData('password', e.target.value)
-                                                    }
+                                                    onChange={(e) => setData('password', e.target.value)}
                                                     required
                                                 />
-                                                {errors.password && (
-                                                    <p className="text-sm text-red-500">
-                                                        {errors.password}
-                                                    </p>
-                                                )}
+                                                {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="device_type">
-                                                    Device Type
-                                                </Label>
+                                                <Label htmlFor="device_type">Device Type</Label>
                                                 <Select
                                                     value={data.device_type}
-                                                    onValueChange={(value: keyof typeof deviceTypes) =>
-                                                        setData('device_type', value)
-                                                    }
+                                                    onValueChange={(value: keyof typeof deviceTypes) => setData('device_type', value)}
                                                 >
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select device type" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {Object.entries(deviceTypes).map(
-                                                            ([value, label]) => (
-                                                                <SelectItem
-                                                                    key={value}
-                                                                    value={value}
-                                                                >
-                                                                    {label}
-                                                                </SelectItem>
-                                                            )
-                                                        )}
+                                                        {Object.entries(deviceTypes).map(([value, label]) => (
+                                                            <SelectItem key={value} value={value}>
+                                                                {label}
+                                                            </SelectItem>
+                                                        ))}
                                                     </SelectContent>
                                                 </Select>
-                                                {errors.device_type && (
-                                                    <p className="text-sm text-red-500">
-                                                        {errors.device_type}
-                                                    </p>
-                                                )}
+                                                {errors.device_type && <p className="text-sm text-red-500">{errors.device_type}</p>}
                                             </div>
 
                                             <div className="space-y-2">
                                                 <Label htmlFor="port">Port</Label>
-                                                <Input
-                                                    id="port"
-                                                    type="number"
-                                                    value={data.port}
-                                                    onChange={(e) =>
-                                                        setData('port', e.target.value)
-                                                    }
-                                                />
-                                                {errors.port && (
-                                                    <p className="text-sm text-red-500">
-                                                        {errors.port}
-                                                    </p>
-                                                )}
+                                                <Input id="port" type="number" value={data.port} onChange={(e) => setData('port', e.target.value)} />
+                                                {errors.port && <p className="text-sm text-red-500">{errors.port}</p>}
                                             </div>
                                         </div>
 
                                         <div className="flex justify-end space-x-4">
-                                            <Button
-                                                variant="outline"
-                                                asChild
-                                            >
-                                                <Link href={route('network-switches.index')}>
-                                                    Cancel
-                                                </Link>
+                                            <Button variant="outline" asChild>
+                                                <Link href={route('network-switches.index')}>Cancel</Link>
                                             </Button>
-                                            <Button
-                                                type="button"
-                                                variant="secondary"
-                                                onClick={() => {
-                                                    router.post(route('network-switches.walk', networkSwitch.id), { replace: true });
-                                                }}
-                                            >
-                                                Walk Device
+                                            <Button type="button" variant="secondary" onClick={walkDevice} disabled={switchData.syncing}>
+                                                {switchData.syncing ? (
+                                                    <>
+                                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                        Walking Device...
+                                                    </>
+                                                ) : (
+                                                    'Walk Device'
+                                                )}
                                             </Button>
-                                            <Button
-                                                type="submit"
-                                                disabled={processing}
-                                            >
+                                            <Button type="submit" disabled={processing}>
                                                 Update Switch
                                             </Button>
                                         </div>
                                     </form>
+                                    <div className="mt-6">
+                                        <h3 className="mb-4 text-lg font-semibold">Device Data Collection History</h3>
+                                        <SyncHistoryTable networkSwitchId={switchData.id} />
+                                    </div>
                                 </CardContent>
                             </Card>
                         </TabsContent>
@@ -269,6 +258,47 @@ export default function Edit({ switch: networkSwitch, macAddresses, ...props }: 
                                 </CardHeader>
                                 <CardContent>
                                     <MacAddressTable macAddresses={macAddresses ?? []} />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                        <TabsContent value="interfaces">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Interfaces</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Interface</TableHead>
+                                                <TableHead>Description</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead>VLAN</TableHead>
+                                                <TableHead>MAC Address</TableHead>
+                                                <TableHead>IP Address</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {((switchData.interfaces ?? []).length === 0) ? (
+                                                <TableRow>
+                                                    <TableCell colSpan={6} className="text-center text-muted-foreground">
+                                                        No interfaces found.
+                                                    </TableCell>
+                                                </TableRow>
+                                            ) : (
+                                                (switchData.interfaces ?? []).map((iface: any) => (
+                                                    <TableRow key={iface.id}>
+                                                        <TableCell>{iface.interface}</TableCell>
+                                                        <TableCell>{iface.description ?? '-'}</TableCell>
+                                                        <TableCell>{iface.link_status ?? '-'}</TableCell>
+                                                        <TableCell>{iface.vlan_id ?? '-'}</TableCell>
+                                                        <TableCell>{iface.mac_address ?? '-'}</TableCell>
+                                                        <TableCell>{iface.ip_address ?? '-'}</TableCell>
+                                                    </TableRow>
+                                                ))
+                                            )}
+                                        </TableBody>
+                                    </Table>
                                 </CardContent>
                             </Card>
                         </TabsContent>

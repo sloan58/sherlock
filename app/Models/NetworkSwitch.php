@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -46,8 +47,22 @@ class NetworkSwitch extends Model
             ->withTimestamps();
     }
 
+    #[Scope]
+    protected function visibleMacAddresses()
+    {
+        return $this->macAddresses()
+            ->wherePivot("ports", "!=", "CPU")
+            ->wherePivot("ports", "not like", "Po%");
+    }
+
+
     public function interfaces(): HasMany
     {
         return $this->hasMany(NetworkInterface::class);
+    }
+
+    public function syncHistory(): HasMany
+    {
+        return $this->hasMany(DeviceSyncHistory::class);
     }
 }

@@ -4,13 +4,14 @@ import sys
 import json
 import logging
 from manuf import manuf
+import os
 
 # Configure logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('mac_lookup_debug.log'),
+        logging.FileHandler(os.path.join(os.path.dirname(__file__), 'logs', 'mac_lookup_debug.log')),
         logging.StreamHandler(sys.stderr)
     ]
 )
@@ -62,4 +63,6 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
+    # Ensure logs directory exists
+    os.makedirs(os.path.join(os.path.dirname(__file__), 'logs'), exist_ok=True)
     main()

@@ -39,6 +39,14 @@ class MacLookupJob implements ShouldQueue
     {
         $manuf = $networkService->lookupMacManufacturer($this->macAddress->mac_address);
         $device = array_merge($this->portDetails, $manuf);
-        $this->networkSwitch->macAddresses()->attach($this->macAddress, [...$device]);
+        
+        // Ensure mac_address is not included in the pivot data
+        if (isset($device['mac_address'])) {
+            unset($device['mac_address']);
+        }
+        
+        $this->networkSwitch->macAddresses()->syncWithoutDetaching([
+            $this->macAddress->id => $device
+        ]);
     }
 }

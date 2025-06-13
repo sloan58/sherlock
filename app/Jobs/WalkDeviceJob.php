@@ -2,31 +2,26 @@
 
 namespace App\Jobs;
 
-use Throwable;
-use Illuminate\Bus\Queueable;
 use App\Models\NetworkSwitch;
-use Illuminate\Queue\SerializesModels;
 use App\Services\NetworkDeviceService;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Throwable;
 
 class WalkDeviceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected NetworkSwitch $networkSwitch;
+    public NetworkSwitch $networkSwitch;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(NetworkSwitch $networkSwitch)
-    {
+    public function __construct(NetworkSwitch $networkSwitch) {
         $this->networkSwitch = $networkSwitch;
     }
 
     /**
-     * Execute the job.
      * @throws Throwable
      */
     public function handle(NetworkDeviceService $networkService): void
@@ -36,9 +31,21 @@ class WalkDeviceJob implements ShouldQueue
             $networkService->getInterfaceInfo($this->networkSwitch);
             $networkService->getCdpNeighbors($this->networkSwitch);
             $networkService->getMacAddressTable($this->networkSwitch);
+
+            $this->networkSwitch->syncHistory()->create([
+                'result' => 'completed',
+                'completed_at' => now(),
+            ]);
+
+            $this->networkSwitch->update(['syncing' => false]);
         } catch (Throwable $e) {
-            $this->networkSwitch->syncing = false;
-            $this->networkSwitch->save();
+            $this->networkSwitch->syncHistory()->create([
+                'result' => 'failed',
+                'error_message' => $e->getMessage(),
+                'completed_at' => now(),
+            ]);
+
+            $this->networkSwitch->update(['syncing' => false]);
             throw $e; // Let the job be marked as failed
         }
     }

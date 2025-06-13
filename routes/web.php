@@ -36,8 +36,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Network Switch Routes
-    Route::resource('network-switches', NetworkSwitchController::class);
+        Route::resource('network-switches', NetworkSwitchController::class);
     Route::post('network-switches/{networkSwitch}/walk', [NetworkSwitchController::class, 'walk'])->name('network-switches.walk');
+    Route::get('/network-switches/{networkSwitch}/sync-history', [NetworkSwitchController::class, 'getSyncHistory'])
+        ->name('network-switches.sync-history');
 });
 
 require __DIR__.'/settings.php';

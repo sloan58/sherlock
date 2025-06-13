@@ -30,15 +30,10 @@ export default function MacAddressTable({ macAddresses }: { macAddresses: MacAdd
         const results = macAddresses.filter(mac => {
             const fields = [
                 mac.mac_address,
-                mac.vendor,
                 mac.pivot?.ports,
                 mac.pivot?.vlan_id,
                 mac.pivot?.type,
-                mac.pivot?.age,
-                mac.pivot?.secure,
-                mac.pivot?.ntfy,
                 mac.pivot?.manufacturer,
-                mac.pivot?.comment
             ];
 
             const hasMatch = fields.some(field => {
@@ -66,21 +61,16 @@ export default function MacAddressTable({ macAddresses }: { macAddresses: MacAdd
                 <TableHeader>
                     <TableRow>
                         <TableHead>MAC Address</TableHead>
-                        <TableHead>Vendor</TableHead>
                         <TableHead>Ports</TableHead>
                         <TableHead>VLAN ID</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Age</TableHead>
-                        <TableHead>Secure</TableHead>
-                        <TableHead>Notify</TableHead>
                         <TableHead>Manufacturer</TableHead>
-                        <TableHead>Comment</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {filtered.length === 0 ? (
                         <TableRow>
-                            <TableCell colSpan={10} className="text-center text-muted-foreground">
+                            <TableCell colSpan={5} className="text-center text-muted-foreground">
                                 No MAC addresses found.
                             </TableCell>
                         </TableRow>
@@ -88,15 +78,10 @@ export default function MacAddressTable({ macAddresses }: { macAddresses: MacAdd
                         filtered.map(mac => (
                             <TableRow key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}`}>
                                 <TableCell>{mac.mac_address}</TableCell>
-                                <TableCell>{mac.vendor ?? "-"}</TableCell>
                                 <TableCell>{mac.pivot?.ports ?? "-"}</TableCell>
                                 <TableCell>{mac.pivot?.vlan_id ?? "-"}</TableCell>
                                 <TableCell>{mac.pivot?.type ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.age ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.secure ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.ntfy ?? "-"}</TableCell>
                                 <TableCell>{mac.pivot?.manufacturer ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.comment ?? "-"}</TableCell>
                             </TableRow>
                         ))
                     )}

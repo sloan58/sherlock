@@ -27,40 +27,25 @@ class NetworkDeviceService
      */
     public function getMacAddressTable(NetworkSwitch $networkSwitch): array
     {
-        // Prepare device details for Netmiko
-        $device = [
-            'device_type' => $networkSwitch->device_type ?? 'cisco_nxos',
-            'host' => $networkSwitch->host,
-            'username' => $networkSwitch->username,
-            'password' => $networkSwitch->password,
-            'port' => $networkSwitch->port ?? 22,
-        ];
-
-        $jsonInput = json_encode([
-            'device' => $device,
-            'command' => 'show mac address-table | exclude Po',
-            'use_textfsm' => true,
-        ]);
-
-        // Execute generalized Python script
-        $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
-        ];
-
-        $response = $this->runCommand($process, $jsonInput);
-
-        if (!is_array($response)) {
-            Log::error('Unexpected response from netmiko_command.py', ['response' => $response]);
-            return [];
-        }
+        $macAddresses = $this->getCommandOutput($networkSwitch, 'show mac address-table');
 
         $jobs = [];
-        foreach ($response as $device) {
-            if (!isset($device['mac_address'])) continue;
-            $macAddress = MacAddress::firstOrCreate(['mac_address' => $device['mac_address']]);
-            unset($device['mac_address']);
-            $jobs[] = new MacLookupJob($macAddress, $networkSwitch, $device);
+        foreach ($macAddresses as $macData) {
+            $normalizedData = $this->normalizeMacAddressData($macData, $networkSwitch->device_type);
+            info('normalized data', $normalizedData);
+            $macAddress = MacAddress::firstOrCreate(
+                ['mac_address' => $normalizedData['mac_address']]
+            );
+
+            // Remove mac_address from the pivot data as it's not a column in the pivot table
+            $pivotData = $normalizedData;
+            unset($pivotData['mac_address']);
+            
+            $networkSwitch->macAddresses()->syncWithoutDetaching([
+                $macAddress->id => $pivotData
+            ]);
+
+            $jobs[] = new MacLookupJob($macAddress, $networkSwitch, $pivotData);
         }
 
         if (!empty($jobs)) {
@@ -81,7 +66,7 @@ class NetworkDeviceService
                 ->dispatch();
         }
 
-        return $response;
+        return $macAddresses;
     }
 
     /**
@@ -291,7 +276,6 @@ class NetworkDeviceService
         // Store CDP neighbor data in the corresponding NetworkInterface
         if (is_array($response)) {
             foreach ($response as $cdpData) {
-                info('cdp entry', [$cdpData]);
                 if (!isset($cdpData['local_interface'])) continue;
                 $networkSwitch->interfaces()->where('interface', $cdpData['local_interface'])->first()?->update([
                     'neighbor_chassis_id' => $cdpData['chassis_id'] ?? null,
@@ -338,5 +322,61 @@ class NetworkDeviceService
             Log::error('Error looking up MAC address: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    private function normalizeMacAddressData(array $data, string $deviceType): array
+    {
+        return match ($deviceType) {
+            'cisco_nxos' => [
+                'mac_address' => $data['mac_address'],
+                'vlan_id' => $data['vlan_id'],
+                'type' => strtolower($data['type']),
+                'age' => $data['age'] ?? null,
+                'secure' => $data['secure'] ?? null,
+                'ntfy' => $data['ntfy'] ?? null,
+                'ports' => $data['ports'] ?? null,
+            ],
+            'cisco_ios' => [
+                'mac_address' => $data['destination_address'],
+                'vlan_id' => $data['vlan_id'] === 'All' ? null : $data['vlan_id'],
+                'type' => strtolower($data['type']),
+                'age' => null,
+                'secure' => null,
+                'ntfy' => null,
+                'ports' => is_array($data['destination_port'])
+                    ? implode(',', $data['destination_port'])
+                    : $data['destination_port'],
+            ],
+            default => throw new \InvalidArgumentException("Unsupported device type: {$deviceType}"),
+        };
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getCommandOutput(NetworkSwitch $networkSwitch, string $command)
+    {
+        // Prepare device details for Netmiko
+        $device = [
+            'device_type' => $networkSwitch->device_type ?? 'cisco_nxos',
+            'host' => $networkSwitch->host,
+            'username' => $networkSwitch->username,
+            'password' => $networkSwitch->password,
+            'port' => $networkSwitch->port ?? 22,
+        ];
+
+        $jsonInput = json_encode([
+            'device' => $device,
+            'command' => $command,
+            'use_textfsm' => true,
+        ]);
+
+        // Execute generalized Python script
+        $process = [
+            base_path('lib/.venv/bin/python'),
+            base_path('lib/netmiko_command.py')
+        ];
+
+        return $this->runCommand($process, $jsonInput);
     }
 }
