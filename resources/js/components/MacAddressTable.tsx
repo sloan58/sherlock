@@ -75,8 +75,8 @@ export default function MacAddressTable({ macAddresses }: { macAddresses: MacAdd
                             </TableCell>
                         </TableRow>
                     ) : (
-                        filtered.map(mac => (
-                            <TableRow key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}`}>
+                        filtered.map((mac, idx) => (
+                            <TableRow key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}-${idx}`}>
                                 <TableCell>{mac.mac_address}</TableCell>
                                 <TableCell>{mac.pivot?.ports ?? "-"}</TableCell>
                                 <TableCell>{mac.pivot?.vlan_id ?? "-"}</TableCell>

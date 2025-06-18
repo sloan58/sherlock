@@ -12,6 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
+import { route } from 'ziggy-js';
+import { Ziggy } from '@/ziggy';
 
 interface NetworkSwitch {
     id: number;
@@ -30,6 +32,8 @@ interface Props extends PageProps {
     };
 }
 
+const customZiggy = { ...Ziggy, url: window.location.origin };
+
 export default function Index({ switches, ...props }: Props) {
     return (
         <AppLayout>
@@ -41,7 +45,7 @@ export default function Index({ switches, ...props }: Props) {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Network Switches</CardTitle>
                             <Button asChild>
-                                <Link href={route('network-switches.create')}>
+                                <Link href={route('network-switches.create', undefined, undefined, customZiggy)}>
                                     Add Switch
                                 </Link>
                             </Button>
@@ -79,10 +83,7 @@ export default function Index({ switches, ...props }: Props) {
                                                     className="mr-2"
                                                 >
                                                     <Link
-                                                        href={route(
-                                                            'network-switches.edit',
-                                                            switch_.id
-                                                        )}
+                                                        href={route('network-switches.edit', switch_.id, undefined, customZiggy)}
                                                     >
                                                         Edit
                                                     </Link>

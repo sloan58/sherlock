@@ -1,6 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
+import { Ziggy } from '@/ziggy';
+import { route } from 'ziggy-js';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -16,6 +18,8 @@ type RegisterForm = {
     password_confirmation: string;
 };
 
+const customZiggy = { ...Ziggy, url: window.location.origin };
+
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         name: '',
@@ -26,7 +30,7 @@ export default function Register() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('register'), {
+        post(route('register', undefined, undefined, customZiggy), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -109,7 +113,7 @@ export default function Register() {
 
                 <div className="text-muted-foreground text-center text-sm">
                     Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
+                    <TextLink href={route('login', undefined, undefined, customZiggy)} tabIndex={6}>
                         Log in
                     </TextLink>
                 </div>

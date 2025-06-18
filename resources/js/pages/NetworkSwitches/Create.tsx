@@ -20,11 +20,15 @@ import { HelpCircle } from 'lucide-react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Link } from '@inertiajs/react';
+import { Ziggy } from '@/ziggy';
+import { route } from 'ziggy-js';
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',
     cisco_nxos: 'Cisco NXOS',
 } as const;
+
+const customZiggy = { ...Ziggy, url: window.location.origin };
 
 export default function Create({ ...props }: PageProps) {
     const { data, setData, post, processing, errors } = useForm({
@@ -37,7 +41,7 @@ export default function Create({ ...props }: PageProps) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('network-switches.store'));
+        post(route('network-switches.store', undefined, undefined, customZiggy));
     };
 
     return (
@@ -175,7 +179,7 @@ export default function Create({ ...props }: PageProps) {
                                         variant="outline"
                                         asChild
                                     >
-                                        <Link href={route('network-switches.index')}>
+                                        <Link href={route('network-switches.index', undefined, undefined, customZiggy)}>
                                             Cancel
                                         </Link>
                                     </Button>

@@ -1,6 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
+import { Ziggy } from '@/ziggy';
+import { route } from 'ziggy-js';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,8 @@ type ResetPasswordForm = {
     password_confirmation: string;
 };
 
+const customZiggy = { ...Ziggy, url: window.location.origin };
+
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<ResetPasswordForm>>({
         token: token,
@@ -30,7 +34,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('password.store'), {
+        post(route('password.store', undefined, undefined, customZiggy), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
