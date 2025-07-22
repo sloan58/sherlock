@@ -15,13 +15,6 @@ set -a
 . "$ENV_PATH"
 set +a
 
-# Laravel production bootstrapping
-php artisan config:clear
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
-
 # Wait for MySQL to start completely
 echo "Waiting for database DNS resolution for $DB_HOST..."
 until getent hosts "$DB_HOST" > /dev/null; do
@@ -37,6 +30,9 @@ done
 #
 ## Run migrations
 php artisan migrate --force
+
+# Laravel production bootstrapping
+php artisan optimize
 
 # Start cron
 service cron start
