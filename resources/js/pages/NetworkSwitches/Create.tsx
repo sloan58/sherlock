@@ -28,8 +28,6 @@ const deviceTypes = {
     cisco_nxos: 'Cisco NXOS',
 } as const;
 
-const customZiggy = { ...Ziggy, url: window.location.origin };
-
 export default function Create({ ...props }: PageProps) {
     const { data, setData, post, processing, errors } = useForm({
         host: '',
@@ -41,7 +39,7 @@ export default function Create({ ...props }: PageProps) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('network-switches.store', undefined, undefined, customZiggy));
+        post(route('network-switches.store'));
     };
 
     return (
@@ -179,7 +177,7 @@ export default function Create({ ...props }: PageProps) {
                                         variant="outline"
                                         asChild
                                     >
-                                        <Link href={route('network-switches.index', undefined, undefined, customZiggy)}>
+                                        <Link href={route('network-switches.index')}>
                                             Cancel
                                         </Link>
                                     </Button>

@@ -32,8 +32,6 @@ interface Props extends PageProps {
     };
 }
 
-const customZiggy = { ...Ziggy, url: window.location.origin };
-
 export default function Index({ switches, ...props }: Props) {
     return (
         <AppLayout>
@@ -45,7 +43,7 @@ export default function Index({ switches, ...props }: Props) {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle>Network Switches</CardTitle>
                             <Button asChild>
-                                <Link href={route('network-switches.create', undefined, undefined, customZiggy)}>
+                                <Link href={route('network-switches.create')}>
                                     Add Switch
                                 </Link>
                             </Button>
@@ -83,7 +81,7 @@ export default function Index({ switches, ...props }: Props) {
                                                     className="mr-2"
                                                 >
                                                     <Link
-                                                        href={route('network-switches.edit', switch_.id, undefined, customZiggy)}
+                                                        href={route('network-switches.edit', switch_.id)}
                                                     >
                                                         Edit
                                                     </Link>

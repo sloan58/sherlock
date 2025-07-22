@@ -27,7 +27,10 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
     echo "Database not accepting connections yet. Waiting..."
     sleep 2
 done
-#
+
+# Laravel production bootstrapping
+php artisan optimize
+
 ## Run migrations
 php artisan migrate --force
 
@@ -36,6 +39,11 @@ php artisan optimize
 
 # Start cron
 service cron start
+
+# Generate supervisord config
+cp /etc/supervisord-base/base.conf /etc/supervisord.conf
+cat /etc/supervisord-base/web.conf >> /etc/supervisord.conf
+cat /etc/supervisord-base/queue.conf >> /etc/supervisord.conf
 
 # Start supervisor
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

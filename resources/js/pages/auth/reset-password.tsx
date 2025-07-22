@@ -22,8 +22,6 @@ type ResetPasswordForm = {
     password_confirmation: string;
 };
 
-const customZiggy = { ...Ziggy, url: window.location.origin };
-
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
     const { data, setData, post, processing, errors, reset } = useForm<Required<ResetPasswordForm>>({
         token: token,
@@ -34,7 +32,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('password.store', undefined, undefined, customZiggy), {
+        post(route('password.store'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
