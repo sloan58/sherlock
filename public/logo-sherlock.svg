@@ -1,0 +1,11 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" fill="black"/>
+  <g stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top block of the S -->
+    <polyline points="35,30 60,15 85,30 60,45 35,30"/>
+    <!-- Middle connector -->
+    <polyline points="60,45 60,75"/>
+    <!-- Bottom block of the S -->
+    <polyline points="35,90 60,105 85,90 60,75 35,90"/>
+  </g>
+</svg> 

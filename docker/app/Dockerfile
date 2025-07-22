@@ -1,27 +1,18 @@
-# --- Stage 1: Build assets using Node.js ---
-FROM php:8.4-cli AS frontend
+FROM composer:2 AS backend_build
 
 WORKDIR /app
 
-# Install Node.js, npm, unzip, and git
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get update \
-    && apt-get install -y nodejs unzip git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install pnpm globally
-RUN npm install -g pnpm
-
-# Install Composer for Ziggy
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
 # Copy composer files first
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --ignore-platform-reqs
+RUN composer install --no-dev --no-scripts --ignore-platform-reqs
+
+FROM node:20 AS frontend_build
+
+WORKDIR /app
 
 # Copy only package files first for caching
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+COPY package.json package-lock.json ./
+RUN npm install
 
 # Copy only the frontend-related files
 COPY resources/ resources/
@@ -29,11 +20,13 @@ COPY public/ public/
 COPY vite.config.ts ./
 COPY tsconfig.json ./
 
+# Need to copy backend deps in so ziggy install doesn't fail
+COPY --from=backend_build /app/vendor vendor
+
 # Build for production
 ENV NODE_ENV=production
-RUN pnpm run build
+RUN npm run build
 
-# --- Stage 2: Laravel + PHP + Octane (final image) ---
 FROM php:8.4-cli
 
 # System dependencies
@@ -47,21 +40,17 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install swoole \
     && docker-php-ext-enable swoole
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
 # Set working directory
 WORKDIR /var/www
 
 # Copy app source
 COPY . .
 
-# Copy built frontend assets from the frontend stage
-COPY --from=frontend /app/public/build /var/www/public/build
+# Copy php dependencies from backend build stage
+COPY --from=backend_build /app/vendor vendor
 
-# Install dependencies
-RUN #composer install --optimize-autoloader --no-dev
-RUN composer install
+# Copy built frontend assets from the frontend build stage
+COPY --from=frontend_build /app/public/build /var/www/public/build
 
 # Set Laravel permissions
 RUN chown -R www-data:www-data /var/www \

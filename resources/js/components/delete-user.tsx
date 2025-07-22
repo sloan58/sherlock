@@ -12,8 +12,6 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Ziggy } from '@/ziggy';
 import { route } from 'ziggy-js';
 
-const customZiggy = { ...Ziggy, url: window.location.origin };
-
 export default function DeleteUser() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const { data, setData, delete: destroy, processing, reset, errors, clearErrors } = useForm<Required<{ password: string }>>({ password: '' });
@@ -21,7 +19,7 @@ export default function DeleteUser() {
     const deleteUser: FormEventHandler = (e) => {
         e.preventDefault();
 
-        destroy(route('profile.destroy', undefined, undefined, customZiggy), {
+        destroy(route('profile.destroy'), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: () => passwordInput.current?.focus(),

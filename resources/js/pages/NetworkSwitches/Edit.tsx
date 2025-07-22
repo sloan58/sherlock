@@ -81,8 +81,6 @@ interface Props extends PageProps {
     macAddresses: MacAddress[];
 }
 
-const customZiggy = { ...Ziggy, url: window.location.origin };
-
 export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
     const [switchData, setSwitchData] = useState(networkSwitch);
 
@@ -120,12 +118,12 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('network-switches.update', switchData.id, undefined, customZiggy));
+        put(route('network-switches.update', switchData.id));
     };
 
     const walkDevice = () => {
         router.post(
-            route('network-switches.walk', switchData.id, undefined, customZiggy),
+            route('network-switches.walk', switchData.id),
             {},
             {
                 preserveState: true,
@@ -231,7 +229,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
 
                                         <div className="flex justify-end space-x-4">
                                             <Button variant="outline" asChild>
-                                                <Link href={route('network-switches.index', undefined, undefined, customZiggy)}>Cancel</Link>
+                                                <Link href={route('network-switches.index')}>Cancel</Link>
                                             </Button>
                                             <Button type="button" variant="secondary" onClick={walkDevice} disabled={switchData.syncing}>
                                                 {switchData.syncing ? (
