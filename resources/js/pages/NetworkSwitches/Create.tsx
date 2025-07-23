@@ -50,7 +50,7 @@ export default function Create({ ...props }: PageProps) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
+                            <CardTitle className="flex items-center gap-2 font-mono">
                                 <Network className="h-5 w-5" />
                                 Add Network Switch
                             </CardTitle>

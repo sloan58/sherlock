@@ -7,7 +7,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Responsive
 import React from 'react';
 import { ChartContainer } from '@/components/ui/chart/ChartContainer';
 import { ChartTooltip, ChartTooltipContent } from '@/components/ui/chart/ChartTooltip';
-import { TrendingUp, TrendingDown, Activity, Server, Network, Shield } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Server, Network, Shield, Database } from 'lucide-react';
 import { ChartLegend, ChartLegendContent } from '@/components/ui/chart/ChartLegend';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -107,63 +107,61 @@ export default function Dashboard() {
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-8 rounded-xl p-4">
                 {/* Welcome Header */}
-                <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">Welcome to Sherlock</h1>
-                    <p className="text-muted-foreground">
-                        Your network infrastructure monitoring dashboard
-                    </p>
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight font-mono">Dashboard</h1>
+                    <p className="text-muted-foreground">Monitor your network infrastructure</p>
                 </div>
 
                 {/* Stat Cards Row */}
                 <div className="grid gap-6 md:grid-cols-4 sm:grid-cols-2">
                     <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Devices</CardTitle>
+                            <CardTitle className="text-sm font-medium font-mono">Total Devices</CardTitle>
                             <Server className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalDevices || 9}</div>
+                            <div className="text-2xl font-bold">{totalDevices}</div>
                             <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600">+12%</span> from last month
+                                <span className="text-green-600 dark:text-green-400">+12%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
                     <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Interfaces</CardTitle>
+                            <CardTitle className="text-sm font-medium font-mono">Total Interfaces</CardTitle>
                             <Network className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalInterfaces || 233}</div>
+                            <div className="text-2xl font-bold">{totalInterfaces}</div>
                             <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600">+8%</span> from last month
+                                <span className="text-green-600 dark:text-green-400">+8%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
                     <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">MAC Addresses</CardTitle>
-                            <Activity className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium font-mono">MAC Addresses</CardTitle>
+                            <Database className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalMacs || 366}</div>
+                            <div className="text-2xl font-bold">{totalMacs}</div>
                             <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600">+15%</span> from last month
+                                <span className="text-green-600 dark:text-green-400">+15%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
                     <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Security Score</CardTitle>
+                            <CardTitle className="text-sm font-medium font-mono">Security Score</CardTitle>
                             <Shield className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">94%</div>
                             <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600">+2%</span> from last week
+                                <span className="text-green-600 dark:text-green-400">+2%</span> from last month
                             </p>
                         </CardContent>
                     </Card>

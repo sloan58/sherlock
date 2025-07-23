@@ -42,10 +42,8 @@ export default function Index({ switches, ...props }: Props) {
                 {/* Header Section */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Network Switches</h1>
-                        <p className="text-muted-foreground">
-                            Manage and monitor your network infrastructure devices
-                        </p>
+                        <h1 className="text-3xl font-bold tracking-tight font-mono">Network Switches</h1>
+                        <p className="text-muted-foreground">Manage and monitor your network devices</p>
                     </div>
                     <Button 
                         asChild
@@ -122,7 +120,7 @@ export default function Index({ switches, ...props }: Props) {
                 {/* Main Table */}
                 <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
+                        <CardTitle className="flex items-center gap-2 font-mono">
                             <Network className="h-5 w-5" />
                             Network Devices
                         </CardTitle>

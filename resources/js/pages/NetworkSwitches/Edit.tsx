@@ -172,7 +172,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             </Link>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight">Edit Network Switch</h1>
+                            <h1 className="text-2xl font-bold tracking-tight font-mono">Edit Network Switch</h1>
                             <p className="text-muted-foreground">Configure device settings and monitor data collection</p>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             <nav className="space-y-1">
                                 <button
                                     onClick={() => setActiveTab("device")}
-                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all font-mono ${
                                         activeTab === "device"
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -197,7 +197,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("macs")}
-                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all font-mono ${
                                         activeTab === "macs"
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -208,7 +208,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("interfaces")}
-                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all font-mono ${
                                         activeTab === "interfaces"
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -219,7 +219,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("history")}
-                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all font-mono ${
                                         activeTab === "history"
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -236,7 +236,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             {activeTab === "device" && (
                                 <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
+                                        <CardTitle className="flex items-center gap-2 font-mono">
                                             <Settings className="h-5 w-5" />
                                             Device Configuration
                                         </CardTitle>
@@ -368,7 +368,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             {activeTab === "macs" && (
                                 <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
+                                        <CardTitle className="flex items-center gap-2 font-mono">
                                             <Database className="h-5 w-5" />
                                             MAC Addresses
                                         </CardTitle>
@@ -437,7 +437,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             {activeTab === "interfaces" && (
                                 <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
+                                        <CardTitle className="flex items-center gap-2 font-mono">
                                             <Network className="h-5 w-5" />
                                             Network Interfaces
                                         </CardTitle>
@@ -493,7 +493,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             {activeTab === "history" && (
                                 <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                                     <CardHeader>
-                                        <CardTitle className="flex items-center gap-2">
+                                        <CardTitle className="flex items-center gap-2 font-mono">
                                             <Database className="h-5 w-5" />
                                             Device Data Collection History
                                         </CardTitle>
