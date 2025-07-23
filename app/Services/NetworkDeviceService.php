@@ -79,7 +79,7 @@ class NetworkDeviceService
         // Execute Python script with JSON input
         $process = [
             base_path('lib/.venv/bin/python'),
-            base_path('lib/mac_lookup.py'),
+            base_path('lib/python/mac_lookup.py'),
         ];
 
         return $this->runCommand($process, $jsonInput);
@@ -111,8 +111,8 @@ class NetworkDeviceService
 
         // Execute generalized Python script
         $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
+            base_path('lib/python/.venv/bin/python'),
+            base_path('lib/python/netmiko_command.py')
         ];
 
         $response = $this->runCommand($process, $jsonInput);
@@ -148,8 +148,8 @@ class NetworkDeviceService
 
         // Execute generalized Python script
         $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
+            base_path('lib/python/.venv/bin/python'),
+            base_path('lib/python/netmiko_command.py')
         ];
 
         $response = $this->runCommand($process, $jsonInput);
@@ -187,8 +187,8 @@ class NetworkDeviceService
         ]);
 
         $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
+            base_path('lib/python/.venv/bin/python'),
+            base_path('lib/python/netmiko_command.py')
         ];
 
         $response = $this->runCommand($process, $jsonInput);
@@ -241,8 +241,8 @@ class NetworkDeviceService
         ]);
 
         $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
+            base_path('lib/python/.venv/bin/python'),
+            base_path('lib/python/netmiko_command.py')
         ];
 
         $response = $this->runCommand($process, $jsonInput);
@@ -347,8 +347,8 @@ class NetworkDeviceService
 
         // Execute generalized Python script
         $process = [
-            base_path('lib/.venv/bin/python'),
-            base_path('lib/netmiko_command.py')
+            base_path('lib/python/.venv/bin/python'),
+            base_path('lib/python/netmiko_command.py')
         ];
 
         return $this->runCommand($process, $jsonInput);
