@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Search, Database } from "lucide-react";
 
 interface MacAddress {
     id: number;
@@ -48,45 +49,81 @@ export default function MacAddressTable({ macAddresses }: { macAddresses: MacAdd
     }, [macAddresses, search]);
 
     return (
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm mt-8">
-            <div className="p-4">
+        <div className="space-y-4">
+            {/* Search Section */}
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                     placeholder="Search MAC addresses, vendor, port, VLAN, etc."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    className="max-w-sm"
+                    className="pl-10 border-border/50 focus:border-blue-500 bg-background/50"
                 />
             </div>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>MAC Address</TableHead>
-                        <TableHead>Ports</TableHead>
-                        <TableHead>VLAN ID</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Manufacturer</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {filtered.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={5} className="text-center text-muted-foreground">
-                                No MAC addresses found.
-                            </TableCell>
+
+            {/* Table Section */}
+            <div className="rounded-lg border border-border/50 bg-background/50 overflow-hidden">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="bg-muted/30 border-border/50">
+                            <TableHead className="font-medium text-muted-foreground">MAC Address</TableHead>
+                            <TableHead className="font-medium text-muted-foreground">Ports</TableHead>
+                            <TableHead className="font-medium text-muted-foreground">VLAN ID</TableHead>
+                            <TableHead className="font-medium text-muted-foreground">Type</TableHead>
+                            <TableHead className="font-medium text-muted-foreground">Manufacturer</TableHead>
                         </TableRow>
-                    ) : (
-                        filtered.map((mac, idx) => (
-                            <TableRow key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}-${idx}`}>
-                                <TableCell>{mac.mac_address}</TableCell>
-                                <TableCell>{mac.pivot?.ports ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.vlan_id ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.type ?? "-"}</TableCell>
-                                <TableCell>{mac.pivot?.manufacturer ?? "-"}</TableCell>
+                    </TableHeader>
+                    <TableBody>
+                        {filtered.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Database className="h-8 w-8 text-muted-foreground/50" />
+                                        <p>No MAC addresses found.</p>
+                                    </div>
+                                </TableCell>
                             </TableRow>
-                        ))
+                        ) : (
+                            filtered.map((mac, idx) => (
+                                <TableRow 
+                                    key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}-${idx}`}
+                                    className="hover:bg-muted/30 transition-colors border-border/50"
+                                >
+                                    <TableCell className="font-mono text-sm">{mac.mac_address}</TableCell>
+                                    <TableCell className="font-mono text-sm">{mac.pivot?.ports ?? '-'}</TableCell>
+                                    <TableCell className="font-mono text-sm">{mac.pivot?.vlan_id ?? '-'}</TableCell>
+                                    <TableCell>
+                                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                                            mac.pivot?.type === 'dynamic' 
+                                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+                                                : mac.pivot?.type === 'static'
+                                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                                                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+                                        }`}>
+                                            {mac.pivot?.type ?? '-'}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell className="font-mono text-sm">{mac.pivot?.manufacturer ?? '-'}</TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {/* Results Summary */}
+            {filtered.length > 0 && (
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <span>
+                        Showing {filtered.length} of {macAddresses.length} MAC addresses
+                    </span>
+                    {search && (
+                        <span>
+                            Filtered by "{search}"
+                        </span>
                     )}
-                </TableBody>
-            </Table>
+                </div>
+            )}
         </div>
     );
 }

@@ -16,7 +16,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, Network } from 'lucide-react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Link } from '@inertiajs/react';
@@ -48,9 +48,12 @@ export default function Create({ ...props }: PageProps) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <Card>
+                    <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
                         <CardHeader>
-                            <CardTitle>Add Network Switch</CardTitle>
+                            <CardTitle className="flex items-center gap-2">
+                                <Network className="h-5 w-5" />
+                                Add Network Switch
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submit} className="space-y-6">
@@ -77,6 +80,7 @@ export default function Create({ ...props }: PageProps) {
                                                 setData('host', e.target.value)
                                             }
                                             required
+                                            className="border-border/50 focus:border-blue-600"
                                         />
                                         {errors.host && (
                                             <p className="text-sm text-red-500">
@@ -95,6 +99,7 @@ export default function Create({ ...props }: PageProps) {
                                                 setData('username', e.target.value)
                                             }
                                             required
+                                            className="border-border/50 focus:border-blue-600"
                                         />
                                         {errors.username && (
                                             <p className="text-sm text-red-500">
@@ -113,6 +118,7 @@ export default function Create({ ...props }: PageProps) {
                                                 setData('password', e.target.value)
                                             }
                                             required
+                                            className="border-border/50 focus:border-blue-600"
                                         />
                                         {errors.password && (
                                             <p className="text-sm text-red-500">
@@ -131,7 +137,7 @@ export default function Create({ ...props }: PageProps) {
                                                 setData('device_type', value)
                                             }
                                         >
-                                            <SelectTrigger>
+                                            <SelectTrigger className="border-border/50 focus:border-blue-600">
                                                 <SelectValue placeholder="Select device type" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -163,6 +169,7 @@ export default function Create({ ...props }: PageProps) {
                                             onChange={(e) =>
                                                 setData('port', e.target.value)
                                             }
+                                            className="border-border/50 focus:border-blue-600"
                                         />
                                         {errors.port && (
                                             <p className="text-sm text-red-500">
@@ -176,6 +183,7 @@ export default function Create({ ...props }: PageProps) {
                                     <Button
                                         variant="outline"
                                         asChild
+                                        className="border-blue-600/30 text-blue-600 hover:bg-blue-600/10 hover:border-blue-600/50"
                                     >
                                         <Link href={route('network-switches.index')}>
                                             Cancel
@@ -184,6 +192,7 @@ export default function Create({ ...props }: PageProps) {
                                     <Button
                                         type="submit"
                                         disabled={processing}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                                     >
                                         Add Switch
                                     </Button>

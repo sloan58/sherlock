@@ -129,7 +129,7 @@ export default function Dashboard() {
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-green-500/10 to-green-600/10">
+                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Total Interfaces</CardTitle>
                             <Network className="h-4 w-4 text-muted-foreground" />
@@ -142,7 +142,7 @@ export default function Dashboard() {
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-purple-500/10 to-purple-600/10">
+                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">MAC Addresses</CardTitle>
                             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -155,7 +155,7 @@ export default function Dashboard() {
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-orange-500/10 to-orange-600/10">
+                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Security Score</CardTitle>
                             <Shield className="h-4 w-4 text-muted-foreground" />

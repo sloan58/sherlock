@@ -59,15 +59,13 @@ export function SyncHistoryTable({ networkSwitchId }: Props) {
                                 {format(new Date(record.completed_at), 'PPpp')}
                             </TableCell>
                             <TableCell>
-                                <Badge
-                                    variant={
-                                        record.result === 'completed'
-                                            ? 'default'
-                                            : 'destructive'
-                                    }
-                                >
+                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                                    record.result === 'completed'
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                        : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                                }`}>
                                     {record.result}
-                                </Badge>
+                                </span>
                             </TableCell>
                             <TableCell>{record.error_message}</TableCell>
                         </TableRow>

@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy composer files first
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --ignore-platform-reqs
+RUN composer install --no-scripts --ignore-platform-reqs
 
 FROM node:20 AS frontend_build
 
