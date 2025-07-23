@@ -5,8 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { route } from 'ziggy-js';
-import { Ziggy } from '@/ziggy';
+
 import { DeviceStatusIndicator } from '@/components/ui/status-indicator';
 import { NetworkMetricsCard } from '@/components/ui/metrics-card';
 import { 
@@ -72,7 +71,7 @@ export default function Index({ switches, ...props }: Props) {
 
     const syncDevice = (switchId: number) => {
         router.post(
-            route('network-switches.walk', switchId),
+            route('network-switches.walk', { networkSwitch: switchId }),
             {},
             {
                 preserveState: true,
@@ -319,7 +318,7 @@ export default function Index({ switches, ...props }: Props) {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent align="end">
                                                             <DropdownMenuItem asChild>
-                                                                <Link href={route('network-switches.edit', switch_.id)}>
+                                                                <Link href={route('network-switches.edit', { network_switch: switch_.id })}>
                                                                     <Edit className="mr-2 h-4 w-4" />
                                                                     Edit
                                                                 </Link>

@@ -2,8 +2,7 @@ import AppLogoIcon from '@/components/app-logo-icon';
 import { type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
-import { Ziggy } from '@/ziggy';
-import { route } from 'ziggy-js';
+
 
 interface AuthLayoutProps {
     title?: string;
@@ -25,7 +24,7 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
                     <div className="relative z-20 mt-auto">
                         <blockquote className="space-y-2">
                             <p className="text-lg">&ldquo;{quote.message}&rdquo;</p>
-                            <footer className="text-sm text-neutral-300">{quote.author}</footer>
+                            <footer className="text-sm text-muted-foreground">{quote.author}</footer>
                         </blockquote>
                     </div>
                 )}

@@ -20,8 +20,7 @@ import { HelpCircle, Network } from 'lucide-react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Link } from '@inertiajs/react';
-import { Ziggy } from '@/ziggy';
-import { route } from 'ziggy-js';
+
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',

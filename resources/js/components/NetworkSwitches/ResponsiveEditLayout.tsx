@@ -15,7 +15,7 @@ import {
     Loader2
 } from 'lucide-react';
 import { Link, useForm, router } from '@inertiajs/react';
-import { route } from 'ziggy-js';
+
 import { EnhancedMacAddressTable } from './EnhancedMacAddressTable';
 import { EnhancedInterfacesTable } from './EnhancedInterfacesTable';
 import { SyncHistoryTable } from './SyncHistoryTable';
@@ -91,12 +91,12 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, erro
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        submit('put', route('network-switches.update', networkSwitch.id));
+        submit('put', route('network-switches.update', { network_switch: networkSwitch.id }));
     };
 
     const walkDevice = () => {
         router.post(
-            route('network-switches.walk', networkSwitch.id),
+            route('network-switches.walk', { networkSwitch: networkSwitch.id }),
             {},
             {
                 preserveState: true,
@@ -203,7 +203,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, erro
                                     Device Configuration
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="pt-6">
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">

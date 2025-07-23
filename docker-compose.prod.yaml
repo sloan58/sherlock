@@ -45,9 +45,7 @@ services:
       - sherlock
 
   websocket:
-    build:
-      context: ./lib/js
-      dockerfile: Dockerfile
+    image: kcr.karmatek.io/sherlock-websocket:latest
     restart: unless-stopped
     ports:
       - "8080:8080"

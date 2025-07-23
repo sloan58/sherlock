@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
-import { route } from 'ziggy-js';
+
 
 export default function AuthLayout({ title }: { title?: string }) {
   return (

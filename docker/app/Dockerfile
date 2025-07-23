@@ -1,44 +1,32 @@
-FROM composer:2 AS backend_build
-
-WORKDIR /app
-
-# Copy composer files first
-COPY composer.json composer.lock ./
-RUN composer install --no-scripts --ignore-platform-reqs
-
-FROM node:20 AS frontend_build
+FROM node:20 AS frontend
 
 WORKDIR /app
 
 # Copy only package files first for caching
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # Copy only the frontend-related files
 COPY resources/ resources/
 COPY public/ public/
-COPY vite.config.ts ./
-COPY tsconfig.json ./
+COPY vite.config.ts tsconfig.json ./
 
-# Need to copy backend deps in so ziggy install doesn't fail
-COPY --from=backend_build /app/vendor vendor
-
-# Build for production
-ENV NODE_ENV=production
 RUN npm run build
 
-FROM php:8.4-cli
+FROM php:8.4-cli AS backend
 
 # System dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git curl libpng-dev libjpeg-dev libonig-dev libxml2-dev libbrotli-dev supervisor netcat-traditional cron libldap2-dev sudo \
+    libzip-dev unzip git curl libpng-dev libjpeg-dev libonig-dev libxml2-dev libbrotli-dev supervisor netcat-traditional  \
+    python3-pip python3-venv libssl-dev pkg-config \
     && pecl install redis \
-    && docker-php-ext-enable redis \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd ldap
+    && pecl install swoole \
+    && pecl install mongodb \
+    && docker-php-ext-enable redis swoole mongodb \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
 
-# Install Swoole
-RUN pecl install swoole \
-    && docker-php-ext-enable swoole
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www
@@ -46,11 +34,16 @@ WORKDIR /var/www
 # Copy app source
 COPY . .
 
-# Copy php dependencies from backend build stage
-COPY --from=backend_build /app/vendor vendor
+# Copy built frontend assets from the frontend stage
+COPY --from=frontend /app/public/build /var/www/public/build
 
-# Copy built frontend assets from the frontend build stage
-COPY --from=frontend_build /app/public/build /var/www/public/build
+RUN mv .env.production .env
+
+# Install dependencies
+RUN composer install --optimize-autoloader --no-dev
+
+# Init python scripts
+RUN cd lib/python && python3 -m venv venv && venv/bin/pip install -r requirements.txt
 
 # Set Laravel permissions
 RUN chown -R www-data:www-data /var/www \
