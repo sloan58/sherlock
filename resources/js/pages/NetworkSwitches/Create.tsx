@@ -48,10 +48,10 @@ export default function Create({ ...props }: PageProps) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 font-mono">
-                                <Network className="h-5 w-5" />
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
+                        <CardHeader className="border-b border-primary/20">
+                            <CardTitle className="flex items-center gap-2 font-mono text-primary">
+                                <Network className="h-5 w-5 text-primary" />
                                 Add Network Switch
                             </CardTitle>
                         </CardHeader>
@@ -183,7 +183,7 @@ export default function Create({ ...props }: PageProps) {
                                     <Button
                                         variant="outline"
                                         asChild
-                                        className="border-blue-600/30 text-blue-600 hover:bg-blue-600/10 hover:border-blue-600/50"
+                                        className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
                                     >
                                         <Link href={route('network-switches.index')}>
                                             Cancel
@@ -192,7 +192,7 @@ export default function Create({ ...props }: PageProps) {
                                     <Button
                                         type="submit"
                                         disabled={processing}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                                     >
                                         Add Switch
                                     </Button>

@@ -161,7 +161,7 @@ export default function SSHTerminalComponent({
             <Wifi
                 className={`h-5 w-5 transition-colors duration-200 ${
                     status === 'connected'
-                        ? 'text-green-600'
+                        ? 'text-primary'
                         : 'text-muted-foreground'
                 }`}
                 strokeWidth={2.2}
@@ -186,10 +186,10 @@ export default function SSHTerminalComponent({
     }, [innerSidebarCollapsed]);
 
     return (
-        <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
-            <CardHeader>
+        <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
+            <CardHeader className="border-b border-primary/20">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 font-mono text-base">SSH Terminal</CardTitle>
+                    <CardTitle className="flex items-center gap-2 font-mono text-base text-primary">SSH Terminal</CardTitle>
                     <div className="flex items-center gap-3">
                         <TooltipProvider delayDuration={0}>
                             <Tooltip>
@@ -197,7 +197,7 @@ export default function SSHTerminalComponent({
                                     <Button
                                         variant="outline"
                                         size="icon"
-                                        className={`border-slate-600/30 text-slate-600 hover:bg-slate-600/10 hover:border-slate-600/50 ${expanded ? 'bg-slate-600/10 text-white border-white' : ''}`}
+                                        className={`border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 ${expanded ? 'bg-primary/20 text-primary border-primary' : ''}`}
                                         onClick={handleExpandToggle}
                                         aria-label="Toggle Theater Mode"
                                     >
@@ -209,17 +209,17 @@ export default function SSHTerminalComponent({
                         </TooltipProvider>
                         {getStatusIcon()}
                         {isConnected ? (
-                            <Button onClick={handleDisconnect} variant="outline" size="sm" className="border-red-600/30 text-red-600 hover:bg-red-600/10 hover:border-red-600/50 px-3">Disconnect</Button>
+                            <Button onClick={handleDisconnect} variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 px-3">Disconnect</Button>
                         ) : (
-                            <Button onClick={handleConnect} variant="outline" size="sm" className="border-blue-600/30 text-blue-600 hover:bg-blue-600/10 hover:border-blue-600/50 px-3" disabled={isConnecting}>
+                            <Button onClick={handleConnect} variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 px-3" disabled={isConnecting}>
                                 Connect
                             </Button>
                         )}
                     </div>
                 </div>
             </CardHeader>
-            <CardContent>
-                <div style={{ width: '100%', height: 400, background: '#000', borderRadius: 8 }}>
+            <CardContent className="p-4">
+                <div style={{ width: '100%', height: 400, background: '#000', borderRadius: 8, border: '1px solid hsl(var(--primary) / 0.2)' }}>
                     <div ref={terminalRef} style={{ width: '100%', height: '100%' }} />
                 </div>
             </CardContent>

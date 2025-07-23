@@ -1,20 +1,46 @@
 import { Head } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { route } from 'ziggy-js';
 import { Ziggy } from '@/ziggy';
-import { Plus, Network, Edit, Server, Activity, Database, Clock } from 'lucide-react';
+import { DeviceStatusIndicator } from '@/components/ui/status-indicator';
+import { NetworkMetricsCard } from '@/components/ui/metrics-card';
+import { 
+    FuturisticTable, 
+    FuturisticTableHeader, 
+    FuturisticTableBody, 
+    FuturisticTableRow, 
+    FuturisticTableHead, 
+    FuturisticTableCell 
+} from '@/components/ui/futuristic-table';
+import { 
+    Plus, 
+    Network, 
+    Edit, 
+    Server, 
+    Activity, 
+    Database, 
+    Clock, 
+    AlertCircle,
+    CheckCircle,
+    XCircle,
+    RefreshCw,
+    Search,
+    Filter,
+    MoreHorizontal
+} from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { useState, useMemo } from 'react';
 
 interface NetworkSwitch {
     id: number;
@@ -24,6 +50,13 @@ interface NetworkSwitch {
     interfaces_count: number;
     mac_addresses_count: number;
     last_sync_completed: string | null;
+    syncing?: boolean;
+    last_sync_history?: {
+        id: number;
+        result: string;
+        error_message?: string;
+        completed_at: string;
+    } | null;
 }
 
 interface Props extends PageProps {
@@ -34,6 +67,68 @@ interface Props extends PageProps {
 }
 
 export default function Index({ switches, ...props }: Props) {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState<'all' | 'synced' | 'never-synced' | 'syncing'>('all');
+
+    const syncDevice = (switchId: number) => {
+        router.post(
+            route('network-switches.walk', switchId),
+            {},
+            {
+                preserveState: true,
+                preserveScroll: true,
+            },
+        );
+    };
+
+    const filteredSwitches = useMemo(() => {
+        let filtered = switches.data;
+
+        // Search filter
+        if (searchTerm) {
+            filtered = filtered.filter(switch_ => 
+                switch_.host.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (switch_.hostname && switch_.hostname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                switch_.device_type.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        // Status filter
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(switch_ => {
+                switch (statusFilter) {
+                    case 'synced':
+                        return switch_.last_sync_history !== null && switch_.last_sync_history.result === 'completed';
+                    case 'never-synced':
+                        return switch_.last_sync_history === null;
+                    case 'syncing':
+                        return switch_.syncing === true;
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        return filtered;
+    }, [switches.data, searchTerm, statusFilter]);
+
+    const getStatusBadge = (switch_: NetworkSwitch) => {
+        return <DeviceStatusIndicator device={switch_} />;
+    };
+
+    const getDeviceTypeBadge = (deviceType: string) => {
+        return (
+            <Badge variant="secondary" className="font-mono text-xs">
+                {deviceType}
+            </Badge>
+        );
+    };
+
+    const totalInterfaces = switches.data.reduce((sum, switch_) => sum + switch_.interfaces_count, 0);
+    const totalMacAddresses = switches.data.reduce((sum, switch_) => sum + switch_.mac_addresses_count, 0);
+    const syncedDevices = switches.data.filter(s => s.last_sync_history && s.last_sync_history.result === 'completed').length;
+    const syncingDevices = switches.data.filter(s => s.syncing).length;
+
     return (
         <AppLayout>
             <Head title="Network Switches" />
@@ -47,7 +142,7 @@ export default function Index({ switches, ...props }: Props) {
                     </div>
                     <Button 
                         asChild
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                     >
                         <Link href={route('network-switches.create')}>
                             <Plus className="mr-2 h-4 w-4" />
@@ -56,136 +151,157 @@ export default function Index({ switches, ...props }: Props) {
                     </Button>
                 </div>
 
-                {/* Stats Cards */}
+                {/* Enhanced Stats Cards */}
                 <div className="grid gap-6 md:grid-cols-4 sm:grid-cols-2">
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Switches</CardTitle>
-                            <Server className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{switches.data.length}</div>
-                            <p className="text-xs text-muted-foreground">
-                                Active network devices
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <NetworkMetricsCard
+                        title="Total Switches"
+                        value={switches.data.length}
+                        description="Active network devices"
+                        icon={Server}
+                        status="default"
+                    />
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Interfaces</CardTitle>
-                            <Network className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {switches.data.reduce((sum, switch_) => sum + switch_.interfaces_count, 0)}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Across all devices
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <NetworkMetricsCard
+                        title="Total Interfaces"
+                        value={totalInterfaces}
+                        description="Across all devices"
+                        icon={Network}
+                        status="success"
+                    />
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">MAC Addresses</CardTitle>
-                            <Database className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {switches.data.reduce((sum, switch_) => sum + switch_.mac_addresses_count, 0)}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Discovered addresses
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <NetworkMetricsCard
+                        title="MAC Addresses"
+                        value={totalMacAddresses}
+                        description="Discovered addresses"
+                        icon={Database}
+                        status="default"
+                    />
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Last Sync</CardTitle>
-                            <Clock className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {switches.data.filter(s => s.last_sync_completed).length}
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                Devices synced recently
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <NetworkMetricsCard
+                        title="Sync Status"
+                        value={syncedDevices}
+                        description={syncingDevices > 0 ? `${syncingDevices} syncing` : 'All devices synced'}
+                        icon={Activity}
+                        status={syncingDevices > 0 ? "warning" : "success"}
+                    />
                 </div>
 
-                {/* Main Table */}
-                <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
+                {/* Search and Filter Section */}
+                <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-mono">
-                            <Network className="h-5 w-5" />
+                        <CardTitle className="flex items-center gap-2 font-mono text-primary">
+                            <Network className="h-5 w-5 text-primary" />
                             Network Devices
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Host</TableHead>
-                                    <TableHead>Hostname</TableHead>
-                                    <TableHead>Device Type</TableHead>
-                                    <TableHead>Interfaces</TableHead>
-                                    <TableHead>MAC Addresses</TableHead>
-                                    <TableHead>Last Sync</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                                <TableBody>
-                                    {switches.data.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={7} className="text-center text-muted-foreground py-12">
+                        <div className="flex items-center space-x-4 mb-6">
+                            <div className="relative flex-1 max-w-sm">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search switches..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="pl-10"
+                                />
+                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        <Filter className="h-4 w-4" />
+                                        Status: {statusFilter === 'all' ? 'All' : statusFilter.replace('-', ' ')}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => setStatusFilter('all')}>
+                                        All Devices
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setStatusFilter('synced')}>
+                                        Synced
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setStatusFilter('never-synced')}>
+                                        Never Synced
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setStatusFilter('syncing')}>
+                                        Syncing
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+
+                        {/* Enhanced Table */}
+                        <FuturisticTable>
+                            <FuturisticTableHeader>
+                                <FuturisticTableRow className="border-b border-primary/20 bg-primary/5">
+                                    <FuturisticTableHead>Host</FuturisticTableHead>
+                                    <FuturisticTableHead>Hostname</FuturisticTableHead>
+                                    <FuturisticTableHead>Device Type</FuturisticTableHead>
+                                    <FuturisticTableHead>Status</FuturisticTableHead>
+                                    <FuturisticTableHead>Interfaces</FuturisticTableHead>
+                                    <FuturisticTableHead>MAC Addresses</FuturisticTableHead>
+                                    <FuturisticTableHead>Last Sync</FuturisticTableHead>
+                                    <FuturisticTableHead className="text-right">Actions</FuturisticTableHead>
+                                </FuturisticTableRow>
+                            </FuturisticTableHeader>
+                                <FuturisticTableBody>
+                                    {filteredSwitches.length === 0 ? (
+                                        <FuturisticTableRow>
+                                            <FuturisticTableCell colSpan={8} className="text-center text-muted-foreground py-12">
                                                 <div className="flex flex-col items-center gap-3">
                                                     <Network className="h-8 w-8 text-muted-foreground/50" />
                                                     <div className="space-y-1">
                                                         <p className="font-medium">No network switches found</p>
                                                         <p className="text-sm text-muted-foreground">
-                                                            Get started by adding your first network device
+                                                            {searchTerm || statusFilter !== 'all' 
+                                                                ? 'Try adjusting your search or filters'
+                                                                : 'Get started by adding your first network device'
+                                                            }
                                                         </p>
                                                     </div>
                                                 </div>
-                                            </TableCell>
-                                        </TableRow>
+                                            </FuturisticTableCell>
+                                        </FuturisticTableRow>
                                     ) : (
-                                        switches.data.map((switch_) => (
-                                            <TableRow key={switch_.id}>
-                                                <TableCell className="font-mono text-sm font-medium">
+                                        filteredSwitches.map((switch_) => (
+                                            <FuturisticTableRow key={switch_.id}>
+                                                <FuturisticTableCell className="font-mono text-sm font-medium">
                                                     {switch_.host}
-                                                </TableCell>
-                                                <TableCell className="font-mono text-sm">
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell className="font-mono text-sm">
                                                     {switch_.hostname ?? '-'}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-blue-600/10 text-blue-600 dark:bg-blue-600/20 dark:text-blue-400">
-                                                        {switch_.device_type}
-                                                    </span>
-                                                </TableCell>
-                                                <TableCell>
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell>
+                                                    {getDeviceTypeBadge(switch_.device_type)}
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell>
+                                                    {getStatusBadge(switch_)}
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell>
                                                     <div className="flex items-center gap-2">
                                                         <Network className="h-3 w-3 text-muted-foreground" />
                                                         <span className="font-medium">{switch_.interfaces_count}</span>
                                                     </div>
-                                                </TableCell>
-                                                <TableCell>
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell>
                                                     <div className="flex items-center gap-2">
                                                         <Database className="h-3 w-3 text-muted-foreground" />
                                                         <span className="font-medium">{switch_.mac_addresses_count}</span>
                                                     </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {switch_.last_sync_completed ? (
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell>
+                                                    {switch_.syncing ? (
+                                                        <span className="text-sm text-muted-foreground">In Progress</span>
+                                                    ) : switch_.last_sync_history ? (
                                                         <div className="flex items-center gap-2">
-                                                            <Clock className="h-3 w-3 text-green-500" />
+                                                            <Clock className="h-3 w-3 text-muted-foreground" />
                                                             <span className="text-sm">
-                                                                {new Date(switch_.last_sync_completed).toLocaleString()}
+                                                                {new Date(switch_.last_sync_history.completed_at).toLocaleString()}
                                                             </span>
+                                                            {switch_.last_sync_history.result === 'completed' ? (
+                                                                <CheckCircle className="h-3 w-3 text-green-600" />
+                                                            ) : (
+                                                                <XCircle className="h-3 w-3 text-red-600" />
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <div className="flex items-center gap-2">
@@ -193,25 +309,47 @@ export default function Index({ switches, ...props }: Props) {
                                                             <span className="text-sm text-muted-foreground">Never</span>
                                                         </div>
                                                     )}
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        asChild
-                                                        className="hover:bg-blue-600/10 hover:text-blue-600"
-                                                    >
-                                                        <Link href={route('network-switches.edit', switch_.id)}>
-                                                            <Edit className="mr-2 h-4 w-4" />
-                                                            Edit
-                                                        </Link>
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
+                                                </FuturisticTableCell>
+                                                <FuturisticTableCell className="text-right">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="sm">
+                                                                <MoreHorizontal className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuItem asChild>
+                                                                <Link href={route('network-switches.edit', switch_.id)}>
+                                                                    <Edit className="mr-2 h-4 w-4" />
+                                                                    Edit
+                                                                </Link>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => syncDevice(switch_.id)}>
+                                                                <Activity className="mr-2 h-4 w-4" />
+                                                                Sync Now
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </FuturisticTableCell>
+                                            </FuturisticTableRow>
                                         ))
                                     )}
-                                </TableBody>
-                            </Table>
+                                </FuturisticTableBody>
+                            </FuturisticTable>
+
+                        {/* Results Summary */}
+                        {filteredSwitches.length > 0 && (
+                            <div className="flex items-center justify-between text-sm text-muted-foreground mt-4">
+                                <span>
+                                    Showing {filteredSwitches.length} of {switches.data.length} switches
+                                </span>
+                                {(searchTerm || statusFilter !== 'all') && (
+                                    <span>
+                                        Filtered by {searchTerm ? `"${searchTerm}"` : ''} {searchTerm && statusFilter !== 'all' ? 'and' : ''} {statusFilter !== 'all' ? statusFilter.replace('-', ' ') : ''}
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

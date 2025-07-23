@@ -71,4 +71,9 @@ class NetworkSwitch extends Model
     {
         return $this->hasMany(DeviceSyncHistory::class);
     }
+
+    public function lastSyncHistory()
+    {
+        return $this->hasOne(DeviceSyncHistory::class)->latest();
+    }
 }

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+    FuturisticTable,
+    FuturisticTableBody,
+    FuturisticTableCell,
+    FuturisticTableHead,
+    FuturisticTableHeader,
+    FuturisticTableRow,
+} from '@/components/ui/futuristic-table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { router } from '@inertiajs/react';
@@ -44,21 +44,21 @@ export function SyncHistoryTable({ networkSwitchId }: Props) {
 
     return (
         <div className="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Result</TableHead>
-                        <TableHead>Error Message</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
+            <FuturisticTable>
+                <FuturisticTableHeader>
+                    <FuturisticTableRow>
+                        <FuturisticTableHead>Date</FuturisticTableHead>
+                        <FuturisticTableHead>Result</FuturisticTableHead>
+                        <FuturisticTableHead>Error Message</FuturisticTableHead>
+                    </FuturisticTableRow>
+                </FuturisticTableHeader>
+                <FuturisticTableBody>
                     {history.map((record) => (
-                        <TableRow key={record.id}>
-                            <TableCell>
+                        <FuturisticTableRow key={record.id}>
+                            <FuturisticTableCell>
                                 {format(new Date(record.completed_at), 'PPpp')}
-                            </TableCell>
-                            <TableCell>
+                            </FuturisticTableCell>
+                            <FuturisticTableCell>
                                 <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
                                     record.result === 'completed'
                                         ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
@@ -66,12 +66,12 @@ export function SyncHistoryTable({ networkSwitchId }: Props) {
                                 }`}>
                                     {record.result}
                                 </span>
-                            </TableCell>
-                            <TableCell>{record.error_message}</TableCell>
-                        </TableRow>
+                            </FuturisticTableCell>
+                            <FuturisticTableCell>{record.error_message}</FuturisticTableCell>
+                        </FuturisticTableRow>
                     ))}
-                </TableBody>
-            </Table>
+                </FuturisticTableBody>
+            </FuturisticTable>
         </div>
     );
 }

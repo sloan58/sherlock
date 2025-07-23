@@ -15,6 +15,7 @@ class NetworkSwitchController extends Controller
     {
         return Inertia::render('NetworkSwitches/Index', [
             'switches' => NetworkSwitch::withCount(['interfaces', 'macAddresses'])
+                ->with('lastSyncHistory')
                 ->latest()
                 ->paginate(10)
         ]);

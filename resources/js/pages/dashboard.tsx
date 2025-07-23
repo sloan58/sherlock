@@ -114,54 +114,54 @@ export default function Dashboard() {
 
                 {/* Stat Cards Row */}
                 <div className="grid gap-6 md:grid-cols-4 sm:grid-cols-2">
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium font-mono">Total Devices</CardTitle>
-                            <Server className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium font-mono text-primary">Total Devices</CardTitle>
+                            <Server className="h-4 w-4 text-primary/70" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalDevices}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600 dark:text-green-400">+12%</span> from last month
+                            <div className="text-2xl font-bold text-primary">{totalDevices}</div>
+                            <p className="text-xs text-primary/60">
+                                <span className="text-primary">+12%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium font-mono">Total Interfaces</CardTitle>
-                            <Network className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium font-mono text-primary">Total Interfaces</CardTitle>
+                            <Network className="h-4 w-4 text-primary/70" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalInterfaces}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600 dark:text-green-400">+8%</span> from last month
+                            <div className="text-2xl font-bold text-primary">{totalInterfaces}</div>
+                            <p className="text-xs text-primary/60">
+                                <span className="text-primary">+8%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium font-mono">MAC Addresses</CardTitle>
-                            <Database className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium font-mono text-primary">MAC Addresses</CardTitle>
+                            <Database className="h-4 w-4 text-primary/70" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{totalMacs}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600 dark:text-green-400">+15%</span> from last month
+                            <div className="text-2xl font-bold text-primary">{totalMacs}</div>
+                            <p className="text-xs text-primary/60">
+                                <span className="text-primary">+15%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
                     
-                    <Card className="border-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium font-mono">Security Score</CardTitle>
-                            <Shield className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium font-mono text-primary">Security Score</CardTitle>
+                            <Shield className="h-4 w-4 text-primary/70" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">94%</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-green-600 dark:text-green-400">+2%</span> from last month
+                            <div className="text-2xl font-bold text-primary">94%</div>
+                            <p className="text-xs text-primary/60">
+                                <span className="text-primary">+2%</span> from last month
                             </p>
                         </CardContent>
                     </Card>
@@ -170,10 +170,10 @@ export default function Dashboard() {
                 {/* Main Charts Row */}
                 <div className="grid gap-8 md:grid-cols-2 sm:grid-cols-1">
                     {/* Area Chart - Network Activity */}
-                    <Card className="border-0">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader>
-                            <CardTitle>Network Activity</CardTitle>
-                            <CardDescription>Showing total visitors for the last 6 months</CardDescription>
+                            <CardTitle className="text-primary">Network Activity</CardTitle>
+                            <CardDescription className="text-primary/60">Showing total visitors for the last 6 months</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <ChartContainer config={areaChartConfig}>
@@ -223,16 +223,16 @@ export default function Dashboard() {
                             </ChartContainer>
                         </CardContent>
                         <CardFooter className="flex items-center gap-2 text-sm">
-                            <TrendingUp className="h-4 w-4 text-green-600" />
-                            <span className="text-muted-foreground">Trending up by 5.2% this month</span>
+                            <TrendingUp className="h-4 w-4 text-primary" />
+                            <span className="text-primary/60">Trending up by 5.2% this month</span>
                         </CardFooter>
                     </Card>
 
                     {/* Device Activity Area Chart */}
-                    <Card className="border-0">
+                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
                         <CardHeader>
-                            <CardTitle>Device Activity</CardTitle>
-                            <CardDescription>Active vs inactive devices over time</CardDescription>
+                            <CardTitle className="text-primary">Device Activity</CardTitle>
+                            <CardDescription className="text-primary/60">Active vs inactive devices over time</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <ChartContainer config={activityChartConfig}>
@@ -282,8 +282,8 @@ export default function Dashboard() {
                             </ChartContainer>
                         </CardContent>
                         <CardFooter className="flex items-center gap-2 text-sm">
-                            <TrendingUp className="h-4 w-4 text-green-600" />
-                            <span className="text-muted-foreground">Device uptime improved by 3.1%</span>
+                            <TrendingUp className="h-4 w-4 text-primary" />
+                            <span className="text-primary/60">Device uptime improved by 3.1%</span>
                         </CardFooter>
                     </Card>
                 </div>
