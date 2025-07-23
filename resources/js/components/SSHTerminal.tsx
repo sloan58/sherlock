@@ -3,6 +3,8 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Wifi } from 'lucide-react';
 
 interface SSHTerminalProps {
     networkSwitchId: number;
@@ -148,17 +150,32 @@ export default function SSHTerminalComponent({
         }
     };
 
+    const getStatusIcon = () => {
+        return (
+            <Wifi
+                className={`h-5 w-5 transition-colors duration-200 ${
+                    status === 'connected'
+                        ? 'text-green-600'
+                        : 'text-muted-foreground'
+                }`}
+                strokeWidth={2.2}
+            />
+        );
+    };
+
     return (
         <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2 font-mono text-base">SSH Terminal</CardTitle>
                     <div className="flex items-center gap-3">
-                        {getStatusBadge()}
+                        {getStatusIcon()}
                         {isConnected ? (
-                            <button onClick={handleDisconnect} className="px-4 py-2 rounded bg-red-600 text-white font-semibold text-sm">Disconnect</button>
+                            <Button onClick={handleDisconnect} variant="outline" size="sm" className="border-red-600/30 text-red-600 hover:bg-red-600/10 hover:border-red-600/50 px-3">Disconnect</Button>
                         ) : (
-                            <button onClick={handleConnect} className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm" disabled={isConnecting}>Connect</button>
+                            <Button onClick={handleConnect} variant="outline" size="sm" className="border-blue-600/30 text-blue-600 hover:bg-blue-600/10 hover:border-blue-600/50 px-3" disabled={isConnecting}>
+                                Connect
+                            </Button>
                         )}
                     </div>
                 </div>
