@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Terminal as XTerm } from '@xterm/xterm';
+import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Wifi, WifiOff, X, Terminal } from 'lucide-react';
+import '@xterm/xterm/css/xterm.css';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 interface SSHTerminalProps {
     networkSwitchId: number;
@@ -14,203 +12,139 @@ interface SSHTerminalProps {
     networkSwitchPort?: number;
 }
 
-export default function SSHTerminalComponent({ 
-    networkSwitchId, 
-    networkSwitchHost, 
-    networkSwitchUsername, 
-    networkSwitchPassword, 
-    networkSwitchPort = 22 
+export default function SSHTerminalComponent({
+    networkSwitchHost,
+    networkSwitchUsername,
+    networkSwitchPassword,
+    networkSwitchPort = 22,
 }: SSHTerminalProps) {
     const terminalRef = useRef<HTMLDivElement>(null);
-    const terminalInstanceRef = useRef<XTerm | null>(null);
-    const fitAddonRef = useRef<FitAddon | null>(null);
     const wsRef = useRef<WebSocket | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
-    const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
+    const [status, setStatus] = useState<'ready' | 'connecting' | 'connected' | 'error'>('ready');
+    const termRef = useRef<Terminal | null>(null);
 
-    useEffect(() => {
+    // Connect handler
+    const handleConnect = () => {
+        setIsConnecting(true);
+        setStatus('connecting');
         if (!terminalRef.current) return;
-
-        // Initialize terminal with proper scrollback
-        const terminal = new XTerm({
+        // Clean up any previous terminal
+        if (termRef.current) {
+            termRef.current.dispose();
+        }
+        const term = new Terminal({
             fontSize: 14,
             fontFamily: 'monospace',
-            scrollback: 1000, // ENABLE SCROLLBACK BUFFER
-            rows: 20,
-            cols: 80,
+            scrollback: 1000,
             theme: {
-                background: '#000000',
-                foreground: '#ffffff',
+                background: '#000',
+                foreground: '#fff',
             },
         });
-
         const fitAddon = new FitAddon();
-        terminal.loadAddon(fitAddon);
-
-        terminal.open(terminalRef.current);
+        term.loadAddon(fitAddon);
+        term.open(terminalRef.current);
         fitAddon.fit();
+        term.write('\x1b[2J');
+        term.write('\x1b[H');
+        term.writeln('Connecting to SSH switch...');
+        termRef.current = term;
 
-        terminalInstanceRef.current = terminal;
-        fitAddonRef.current = fitAddon;
+        // Connect to WebSocket SSH proxy
+        const ws = new WebSocket('ws://localhost:8080');
+        wsRef.current = ws;
 
-        // Handle terminal input
-        terminal.onData((data) => {
-            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                wsRef.current.send(JSON.stringify({
-                    type: 'data',
-                    data: data
-                }));
-            }
-        });
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                type: 'connect',
+                host: networkSwitchHost,
+                port: networkSwitchPort,
+                username: networkSwitchUsername,
+                password: networkSwitchPassword,
+            }));
+        };
 
-        // Handle terminal resize
-        terminal.onResize(({ cols, rows }) => {
-            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                wsRef.current.send(JSON.stringify({
-                    type: 'resize',
-                    cols,
-                    rows
-                }));
-            }
-        });
-
-        // Show welcome message
-        terminal.writeln('Welcome to SSH Terminal');
-        terminal.writeln('Click "Connect" to establish SSH connection to ' + networkSwitchHost);
-
-        return () => {
-            terminal.dispose();
-            if (wsRef.current) {
-                wsRef.current.close();
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            switch (data.type) {
+                case 'connected':
+                    term.writeln('\x1b[32m✓ Connected to switch\x1b[0m');
+                    setIsConnected(true);
+                    setIsConnecting(false);
+                    setStatus('connected');
+                    break;
+                case 'data':
+                    term.write(data.data);
+                    break;
+                case 'error':
+                    term.writeln(`\x1b[31m✗ Error: ${data.message}\x1b[0m`);
+                    setIsConnected(false);
+                    setIsConnecting(false);
+                    setStatus('error');
+                    break;
+                case 'disconnected':
+                    term.writeln('\x1b[33mConnection closed\x1b[0m');
+                    setIsConnected(false);
+                    setIsConnecting(false);
+                    setStatus('ready');
+                    break;
             }
         };
-    }, [networkSwitchHost]);
 
-    const connectSSH = async () => {
-        setIsConnecting(true);
-        setConnectionStatus('connecting');
-
-        try {
-            // Connect to WebSocket proxy
-            const ws = new WebSocket(`ws://localhost:8080`);
-            wsRef.current = ws;
-
-            ws.onopen = () => {
-                console.log('WebSocket connected');
-                
-                // Send connection request
-                ws.send(JSON.stringify({
-                    type: 'connect',
-                    host: networkSwitchHost,
-                    port: networkSwitchPort,
-                    username: networkSwitchUsername,
-                    password: networkSwitchPassword
-                }));
-            };
-
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                console.log('WebSocket message received:', data.type, data);
-                
-                switch (data.type) {
-                    case 'connected':
-                        console.log('SSH connected');
-                        setIsConnected(true);
-                        setConnectionStatus('connected');
-                        if (terminalInstanceRef.current) {
-                            terminalInstanceRef.current.writeln('\x1b[32m✓ Connected to ' + networkSwitchHost + '\x1b[0m');
-                        }
-                        break;
-                        
-                    case 'data':
-                        console.log('SSH data received:', data.data);
-                        if (terminalInstanceRef.current) {
-                            terminalInstanceRef.current.write(data.data);
-                        }
-                        break;
-                        
-                    case 'error':
-                        console.log('SSH error:', data.message);
-                        setIsConnected(false);
-                        setConnectionStatus('error');
-                        if (terminalInstanceRef.current) {
-                            terminalInstanceRef.current.writeln('\x1b[31m✗ Connection error: ' + data.message + '\x1b[0m');
-                            terminalInstanceRef.current.write('\x1b[36m$ \x1b[0m');
-                        }
-                        break;
-                        
-                    case 'disconnected':
-                        console.log('SSH disconnected');
-                        setIsConnected(false);
-                        setConnectionStatus('disconnected');
-                        if (terminalInstanceRef.current) {
-                            terminalInstanceRef.current.writeln('\x1b[33mConnection closed\x1b[0m');
-                            terminalInstanceRef.current.write('\x1b[36m$ \x1b[0m');
-                        }
-                        break;
-                }
-            };
-
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                setIsConnected(false);
-                setConnectionStatus('error');
-                if (terminalInstanceRef.current) {
-                    terminalInstanceRef.current.writeln('\x1b[31m✗ WebSocket connection error\x1b[0m');
-                    terminalInstanceRef.current.write('\x1b[36m$ \x1b[0m');
-                }
-            };
-
-            ws.onclose = () => {
-                console.log('WebSocket closed');
-                setIsConnected(false);
-                setConnectionStatus('disconnected');
-            };
-
-        } catch (error: any) {
+        ws.onerror = (err) => {
+            term.writeln('\x1b[31m✗ WebSocket error\x1b[0m');
             setIsConnected(false);
-            setConnectionStatus('error');
-            if (terminalInstanceRef.current) {
-                terminalInstanceRef.current.writeln('\x1b[31m✗ Connection error: ' + error.message + '\x1b[0m');
-                terminalInstanceRef.current.write('\x1b[36m$ \x1b[0m');
-            }
-        } finally {
             setIsConnecting(false);
-        }
+            setStatus('error');
+        };
+        ws.onclose = () => {
+            term.writeln('\x1b[33mWebSocket closed\x1b[0m');
+            setIsConnected(false);
+            setIsConnecting(false);
+            setStatus('ready');
+        };
+
+        // Send terminal input to SSH
+        term.onData((data) => {
+            if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                wsRef.current.send(JSON.stringify({ type: 'data', data }));
+            }
+        });
     };
 
-    const disconnectSSH = () => {
-        if (wsRef.current) {
-            wsRef.current.close();
-        }
+    // Disconnect handler
+    const handleDisconnect = () => {
+        if (wsRef.current) wsRef.current.close();
         setIsConnected(false);
-        setConnectionStatus('disconnected');
-    };
-
-    const getStatusBadge = () => {
-        switch (connectionStatus) {
-            case 'connected':
-                return <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Connected</Badge>;
-            case 'connecting':
-                return <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">Connecting...</Badge>;
-            case 'error':
-                return <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">Connection Failed</Badge>;
-            default:
-                return <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">Ready to Connect</Badge>;
+        setIsConnecting(false);
+        setStatus('ready');
+        if (termRef.current) {
+            termRef.current.dispose();
+            termRef.current = null;
         }
     };
 
-    const getStatusIcon = () => {
-        switch (connectionStatus) {
+    // Clean up on unmount
+    useEffect(() => {
+        return () => {
+            if (wsRef.current) wsRef.current.close();
+            if (termRef.current) termRef.current.dispose();
+        };
+    }, []);
+
+    // Status badge
+    const getStatusBadge = () => {
+        switch (status) {
             case 'connected':
-                return <Wifi className="h-4 w-4 text-green-500" />;
+                return <span className="bg-green-600 text-white rounded px-3 py-1 text-xs font-semibold">Connected</span>;
             case 'connecting':
-                return <Loader2 className="h-4 w-4 animate-spin text-yellow-500" />;
+                return <span className="bg-yellow-500 text-white rounded px-3 py-1 text-xs font-semibold">Connecting...</span>;
             case 'error':
-                return <WifiOff className="h-4 w-4 text-red-500" />;
+                return <span className="bg-red-600 text-white rounded px-3 py-1 text-xs font-semibold">Error</span>;
             default:
-                return <WifiOff className="h-4 w-4 text-gray-500" />;
+                return <span className="bg-slate-500 text-white rounded px-3 py-1 text-xs font-semibold">Ready</span>;
         }
     };
 
@@ -218,44 +152,21 @@ export default function SSHTerminalComponent({
         <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
             <CardHeader>
                 <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 font-mono">
-                        <Terminal className="h-5 w-5" />
-                        SSH Terminal (react-xtermjs)
-                    </CardTitle>
-                    <div className="flex items-center gap-2">
-                        {getStatusIcon()}
+                    <CardTitle className="flex items-center gap-2 font-mono text-base">SSH Terminal</CardTitle>
+                    <div className="flex items-center gap-3">
                         {getStatusBadge()}
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={isConnected ? disconnectSSH : connectSSH}
-                            disabled={isConnecting}
-                            className="border-blue-600/30 text-blue-600 hover:bg-blue-600/10 hover:border-blue-600/50"
-                        >
-                            {isConnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : isConnected ? 'Disconnect' : 'Connect'}
-                        </Button>
-                        {isConnected && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={disconnectSSH}
-                                className="border-red-600/30 text-red-600 hover:bg-red-600/10 hover:border-red-600/50"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
+                        {isConnected ? (
+                            <button onClick={handleDisconnect} className="px-4 py-2 rounded bg-red-600 text-white font-semibold text-sm">Disconnect</button>
+                        ) : (
+                            <button onClick={handleConnect} className="px-4 py-2 rounded bg-blue-600 text-white font-semibold text-sm" disabled={isConnecting}>Connect</button>
                         )}
                     </div>
                 </div>
             </CardHeader>
             <CardContent>
-                <div 
-                    ref={terminalRef} 
-                    className="h-96 w-full bg-black rounded-lg"
-                    style={{ 
-                        height: '384px',
-                        overflow: 'hidden'
-                    }}
-                />
+                <div style={{ width: '100%', height: 400, background: '#000', borderRadius: 8 }}>
+                    <div ref={terminalRef} style={{ width: '100%', height: '100%' }} />
+                </div>
             </CardContent>
         </Card>
     );
