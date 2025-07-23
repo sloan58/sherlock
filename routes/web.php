@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\NetworkSwitchController;
+use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\DashboardController;
 
@@ -30,6 +31,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('network-switches/{networkSwitch}/walk', [NetworkSwitchController::class, 'walk'])->name('network-switches.walk');
     Route::get('/network-switches/{networkSwitch}/sync-history', [NetworkSwitchController::class, 'getSyncHistory'])
         ->name('network-switches.sync-history');
+
+    // Terminal Routes
+    Route::prefix('terminal')->group(function () {
+        Route::post('{networkSwitch}/execute', [TerminalController::class, 'executeCommand'])->name('terminal.execute');
+        Route::post('{networkSwitch}/test', [TerminalController::class, 'testConnection'])->name('terminal.test');
+        Route::post('{networkSwitch}/close', [TerminalController::class, 'closeConnection'])->name('terminal.close');
+        Route::post('authorize', [TerminalController::class, 'authorize'])->name('terminal.authorize');
+    });
 });
 
 require __DIR__.'/settings.php';

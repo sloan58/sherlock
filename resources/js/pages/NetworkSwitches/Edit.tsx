@@ -18,18 +18,12 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { HelpCircle, Loader2, Settings, Network, Database, ArrowLeft, Save, Play, Search } from 'lucide-react';
+import { HelpCircle, Loader2, Settings, Network, Database, ArrowLeft, Save, Play, Search, Terminal } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from '@/components/ui/tabs';
 import { SyncHistoryTable } from '@/components/NetworkSwitches/SyncHistoryTable';
+import TerminalComponent from '@/components/Terminal';
 import {
     Table,
     TableBody,
@@ -227,6 +221,17 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                 >
                                     <Database className="h-4 w-4" />
                                     History
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab("terminal")}
+                                    className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all font-mono ${
+                                        activeTab === "terminal"
+                                            ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                    }`}
+                                >
+                                    <Terminal className="h-4 w-4" />
+                                    Terminal
                                 </button>
                             </nav>
                         </div>
@@ -502,6 +507,13 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                         <SyncHistoryTable networkSwitchId={switchData.id} />
                                     </CardContent>
                                 </Card>
+                            )}
+
+                            {activeTab === "terminal" && (
+                                <TerminalComponent 
+                                    networkSwitchId={switchData.id} 
+                                    networkSwitchHost={switchData.host}
+                                />
                             )}
                         </div>
                     </div>
