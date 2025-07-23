@@ -79,6 +79,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
     const [switchData, setSwitchData] = useState(networkSwitch);
     const [search, setSearch] = useState("");
     const [activeTab, setActiveTab] = useState("device");
+    const [innerSidebarCollapsed, setInnerSidebarCollapsed] = useState(false);
 
     const filtered = useMemo(() => {
         const trimmedSearch = search.trim().toLowerCase();
@@ -176,7 +177,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                 <div className="flex flex-col space-y-6">
                     <div className="flex gap-6">
                         {/* Left Sidebar Navigation */}
-                        <div className="w-64 space-y-2">
+                        <div className={`space-y-2 transition-all duration-300 ${innerSidebarCollapsed ? 'w-16' : 'w-64'}`}>
                             <nav className="space-y-1">
                                 <button
                                     onClick={() => setActiveTab("device")}
@@ -185,9 +186,10 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     }`}
+                                    title={innerSidebarCollapsed ? "Device Details" : undefined}
                                 >
                                     <Settings className="h-4 w-4" />
-                                    Device Details
+                                    {!innerSidebarCollapsed && <span>Device Details</span>}
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("macs")}
@@ -196,9 +198,10 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     }`}
+                                    title={innerSidebarCollapsed ? "MAC Addresses" : undefined}
                                 >
                                     <Database className="h-4 w-4" />
-                                    MAC Addresses
+                                    {!innerSidebarCollapsed && <span>MAC Addresses</span>}
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("interfaces")}
@@ -207,9 +210,10 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     }`}
+                                    title={innerSidebarCollapsed ? "Interfaces" : undefined}
                                 >
                                     <Network className="h-4 w-4" />
-                                    Interfaces
+                                    {!innerSidebarCollapsed && <span>Interfaces</span>}
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("history")}
@@ -218,9 +222,10 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     }`}
+                                    title={innerSidebarCollapsed ? "History" : undefined}
                                 >
                                     <Database className="h-4 w-4" />
-                                    History
+                                    {!innerSidebarCollapsed && <span>History</span>}
                                 </button>
                                 <button
                                     onClick={() => setActiveTab("terminal")}
@@ -229,9 +234,10 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-blue-600 border border-blue-600/20"
                                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                     }`}
+                                    title={innerSidebarCollapsed ? "Terminal" : undefined}
                                 >
                                     <Terminal className="h-4 w-4" />
-                                    Terminal
+                                    {!innerSidebarCollapsed && <span>Terminal</span>}
                                 </button>
                             </nav>
                         </div>
@@ -516,6 +522,8 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                     networkSwitchUsername={switchData.username}
                                     networkSwitchPassword={switchData.password}
                                     networkSwitchPort={parseInt(switchData.port)}
+                                    onInnerSidebarToggle={setInnerSidebarCollapsed}
+                                    innerSidebarCollapsed={innerSidebarCollapsed}
                                 />
                             )}
                         </div>

@@ -4,7 +4,8 @@ import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Wifi } from 'lucide-react';
+import { Wifi, PanelLeft } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SSHTerminalProps {
     networkSwitchId: number;
@@ -12,6 +13,8 @@ interface SSHTerminalProps {
     networkSwitchUsername: string;
     networkSwitchPassword: string;
     networkSwitchPort?: number;
+    onInnerSidebarToggle?: (collapsed: boolean) => void;
+    innerSidebarCollapsed?: boolean;
 }
 
 export default function SSHTerminalComponent({
@@ -19,6 +22,8 @@ export default function SSHTerminalComponent({
     networkSwitchUsername,
     networkSwitchPassword,
     networkSwitchPort = 22,
+    onInnerSidebarToggle,
+    innerSidebarCollapsed = false,
 }: SSHTerminalProps) {
     const terminalRef = useRef<HTMLDivElement>(null);
     const wsRef = useRef<WebSocket | null>(null);
@@ -26,6 +31,7 @@ export default function SSHTerminalComponent({
     const [isConnecting, setIsConnecting] = useState(false);
     const [status, setStatus] = useState<'ready' | 'connecting' | 'connected' | 'error'>('ready');
     const termRef = useRef<Terminal | null>(null);
+    const [expanded, setExpanded] = useState(false);
 
     // Connect handler
     const handleConnect = () => {
@@ -163,12 +169,44 @@ export default function SSHTerminalComponent({
         );
     };
 
+    const handleExpandToggle = () => {
+        setExpanded((prev) => {
+            const next = !prev;
+            // When expanding, collapse inner sidebar to icon mode
+            if (onInnerSidebarToggle) {
+                onInnerSidebarToggle(next);
+            }
+            return next;
+        });
+    };
+
+    // Sync expanded state with innerSidebarCollapsed prop
+    useEffect(() => {
+        setExpanded(innerSidebarCollapsed);
+    }, [innerSidebarCollapsed]);
+
     return (
         <Card className="border-0 bg-gradient-to-br from-blue-600/5 to-blue-700/5">
             <CardHeader>
                 <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2 font-mono text-base">SSH Terminal</CardTitle>
                     <div className="flex items-center gap-3">
+                        <TooltipProvider delayDuration={0}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className={`border-slate-600/30 text-slate-600 hover:bg-slate-600/10 hover:border-slate-600/50 ${expanded ? 'bg-slate-600/10 text-white border-white' : ''}`}
+                                        onClick={handleExpandToggle}
+                                        aria-label="Toggle Theater Mode"
+                                    >
+                                        <PanelLeft className="h-5 w-5" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Theater Mode</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                         {getStatusIcon()}
                         {isConnected ? (
                             <Button onClick={handleDisconnect} variant="outline" size="sm" className="border-red-600/30 text-red-600 hover:bg-red-600/10 hover:border-red-600/50 px-3">Disconnect</Button>
