@@ -29,8 +29,8 @@ class WalkDeviceJob implements ShouldQueue
         try {
             $networkService->getSwitchVersionInfo($this->networkSwitch);
             $networkService->getInterfaceInfo($this->networkSwitch);
-            $networkService->getCdpNeighbors($this->networkSwitch);
             $networkService->getMacAddressTable($this->networkSwitch);
+            $networkService->getCdpNeighbors($this->networkSwitch);
 
             $this->networkSwitch->syncHistory()->create([
                 'result' => 'completed',

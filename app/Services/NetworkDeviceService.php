@@ -2,17 +2,15 @@
 
 namespace App\Services;
 
-use Exception;
-use Throwable;
-use Illuminate\Bus\Batch;
-use App\Jobs\MacLookupJob;
+use App\Jobs\ProcessInterfaceDescriptionJob;
 use App\Models\MacAddress;
 use App\Models\NetworkSwitch;
-use Illuminate\Support\Facades\Log;
+use Exception;
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Process;
-use App\Jobs\ProcessNetworkInterfaceJob;
-use App\Jobs\ProcessInterfaceDescriptionJob;
+use Throwable;
 
 class NetworkDeviceService
 {
@@ -21,18 +19,18 @@ class NetworkDeviceService
      * Walk a network device using Netmiko
      *
      * @param NetworkSwitch $networkSwitch
-     * @return array
+     * @return void
      * @throws Exception
      * @throws Throwable
      */
-    public function getMacAddressTable(NetworkSwitch $networkSwitch): array
+    public function getMacAddressTable(NetworkSwitch $networkSwitch): void
     {
         $macAddresses = $this->getCommandOutput($networkSwitch, 'show mac address-table');
 
-        $jobs = [];
+        $networkService = new NetworkDeviceService();
+
         foreach ($macAddresses as $macData) {
             $normalizedData = $this->normalizeMacAddressData($macData, $networkSwitch->device_type);
-            info('normalized data', $normalizedData);
             $macAddress = MacAddress::firstOrCreate(
                 ['mac_address' => $normalizedData['mac_address']]
             );
@@ -40,33 +38,25 @@ class NetworkDeviceService
             // Remove mac_address from the pivot data as it's not a column in the pivot table
             $pivotData = $normalizedData;
             unset($pivotData['mac_address']);
-            
+
+            $manuf = $networkService->lookupMacManufacturer($macAddress->mac_address);
+            $device = array_merge($pivotData, $manuf);
+
+            // Ensure mac_address is not included in the pivot data
+            if (isset($device['mac_address'])) {
+                unset($device['mac_address']);
+            }
+
             $networkSwitch->macAddresses()->syncWithoutDetaching([
-                $macAddress->id => $pivotData
+                $macAddress->id => $device
             ]);
 
-            $jobs[] = new MacLookupJob($macAddress, $networkSwitch, $pivotData);
-        }
+            $networkInterface = $networkSwitch->interfaces()->where('interface_short', $macData['ports'])->first();
 
-        if (!empty($jobs)) {
-            Bus::batch($jobs)
-                ->then(function (Batch $batch) use ($networkSwitch) {
-                    // All jobs completed successfully, now process interfaces
-                    $this->getInterfaceInfo($networkSwitch);
-                })
-                ->catch(function (Batch $batch, Throwable $e) {
-                    // First job failure detected...
-                })
-                ->finally(function (Batch $batch) use ($networkSwitch) {
-                    // The batch has finished executing...
-                    $networkSwitch->syncing = false;
-                    $networkSwitch->last_sync_completed = now();
-                    $networkSwitch->save();
-                })
-                ->dispatch();
+            if ($networkInterface) {
+                $networkInterface->macAddresses()->syncWithoutDetaching($macAddress->id);
+            }
         }
-
-        return $macAddresses;
     }
 
     /**
@@ -136,10 +126,10 @@ class NetworkDeviceService
      * Get interface info from a network switch using Netmiko
      *
      * @param NetworkSwitch $networkSwitch
-     * @return array
+     * @return void
      * @throws Throwable
      */
-    public function getInterfaceInfo(NetworkSwitch $networkSwitch): array
+    public function getInterfaceInfo(NetworkSwitch $networkSwitch): void
     {
         // Prepare device details for Netmiko
         $device = [
@@ -164,29 +154,13 @@ class NetworkDeviceService
 
         $response = $this->runCommand($process, $jsonInput);
 
-        // Dispatch a batch of jobs to process each interface
-        $jobs = [];
-        if (is_array($response)) {
-            foreach ($response as $interfaceData) {
-                $jobs[] = new ProcessNetworkInterfaceJob($networkSwitch, $interfaceData);
-            }
+        foreach ($response as $interfaceData) {
+            $networkSwitch->interfaces()
+                ->updateOrCreate(
+                    ['interface' => $interfaceData['interface']],
+                    $interfaceData
+                );
         }
-        if (!empty($jobs)) {
-            Bus::batch($jobs)
-                ->then(function (Batch $batch) use ($networkSwitch) {
-                    // All interface jobs completed, now process interface descriptions
-                    $this->getInterfaceDescriptions($networkSwitch);
-                })
-                ->catch(function (Batch $batch, Throwable $e) {
-                    // Handle error
-                })
-                ->finally(function (Batch $batch) {
-                    // Batch finished
-                })
-                ->dispatch();
-        }
-
-        return $response;
     }
 
     /**

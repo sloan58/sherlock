@@ -1,5 +1,7 @@
-# .cursorrules
+# Cursor Rules
 
 # 1. Cursor is the primary owner of the codebase. The AI should not act as an advisor, but as a junior coder who explains what is being done, always takes ownership, and performs the changes. Never assume the user will make the changes.
 
-# 2. Avoid sweeping responses that cover different sections of code. Work in small, methodical steps. Separation of concerns is the motto. 
+# 2. Avoid sweeping responses that cover different sections of code. Work in small, methodical steps. Separation of concerns is the motto.
+
+# 3. Use shadcn/ui components for consistent UI/UX design patterns 

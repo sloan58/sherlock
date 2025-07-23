@@ -39,6 +39,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('TerminalBareTest');
     })->name('terminal.bare.test');
 
+    // Simple XTerm Test Route
+    Route::get('/simple-xterm-test', function () {
+        return Inertia::render('SimpleXTermTestPage');
+    })->name('simple.xterm.test');
+
     // REMOVE: Terminal Routes
     // Route::prefix('terminal')->group(function () {
     //     Route::post('{networkSwitch}/execute', [TerminalController::class, 'executeCommand'])->name('terminal.execute');

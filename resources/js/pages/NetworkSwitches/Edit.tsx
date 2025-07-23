@@ -460,6 +460,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                                     <TableHead>Interface</TableHead>
                                                     <TableHead>Description</TableHead>
                                                     <TableHead>Status</TableHead>
+                                                    <TableHead>Mode</TableHead>
                                                     <TableHead>VLAN</TableHead>
                                                     <TableHead>MAC Address</TableHead>
                                                     <TableHead>IP Address</TableHead>
@@ -468,7 +469,7 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                             <TableBody>
                                                 {((switchData.interfaces ?? []).length === 0) ? (
                                                     <TableRow>
-                                                        <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                                                        <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                                                             <div className="flex flex-col items-center gap-2">
                                                                 <Network className="h-8 w-8 text-muted-foreground/50" />
                                                                 <p>No interfaces found.</p>
@@ -487,6 +488,19 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                                                                         : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
                                                                 }`}>
                                                                     {interface_.link_status}
+                                                                </span>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                                                                    interface_.mode === 'access' 
+                                                                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' 
+                                                                        : interface_.mode === 'trunk'
+                                                                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+                                                                        : interface_.mode === 'routed'
+                                                                        ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400'
+                                                                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+                                                                }`}>
+                                                                    {interface_.mode ?? '-'}
                                                                 </span>
                                                             </TableCell>
                                                             <TableCell className="font-mono text-sm">{interface_.vlan_id}</TableCell>

@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class NetworkSwitch extends Model
 {
@@ -47,12 +47,18 @@ class NetworkSwitch extends Model
             ->withTimestamps();
     }
 
-    #[Scope]
-    protected function visibleMacAddresses()
+    public function visibleMacAddresses(): BelongsToMany
     {
         return $this->macAddresses()
             ->wherePivot("ports", "!=", "CPU")
-            ->wherePivot("ports", "not like", "Po%");
+            ->wherePivot("ports", "not like", "Po%")
+            ->whereNotExists(function ($query) {
+                $query->select(\DB::raw(1))
+                    ->from('mac_address_network_interface')
+                    ->join('network_interfaces', 'mac_address_network_interface.network_interface_id', '=', 'network_interfaces.id')
+                    ->whereColumn('mac_address_network_interface.mac_address_id', 'mac_addresses.id')
+                    ->where('network_interfaces.mode', 'trunk');
+            });
     }
 
 

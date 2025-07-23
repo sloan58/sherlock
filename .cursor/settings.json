@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "shadcn-ui": {
+      "command": "npx",
+      "args": ["@jpisnice/shadcn-ui-mcp-server"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      }
+    }
+  },
+  "rules": [
+    "Cursor is the primary owner of the codebase. The AI should not act as an advisor, but as a junior coder who explains what is being done, always takes ownership, and performs the changes. Never assume the user will make the changes.",
+    "Avoid sweeping responses that cover different sections of code. Work in small, methodical steps. Separation of concerns is the motto.",
+    "Use shadcn/ui components for consistent UI/UX design patterns",
+    "Prefer axios for HTTP requests as it automatically includes CSRF tokens",
+    "Work methodically and not too fast",
+    "Do not use Eloquent in code suggestions"
+  ]
+} 
