@@ -5,46 +5,11 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import { Toaster } from './components/ui/sonner';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
+import axios from 'axios';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Initialize Laravel Echo for WebSocket support
-if (typeof window !== 'undefined') {
-    window.Pusher = Pusher;
-    
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: import.meta.env.VITE_PUSHER_APP_KEY,
-        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-        forceTLS: true,
-        authorizer: (channel: any, options: any) => {
-            return {
-                authorize: (socketId: string, callback: Function) => {
-                    fetch('/terminal/authorize', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                        },
-                        body: JSON.stringify({
-                            channel_name: channel.name,
-                            socket_id: socketId,
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        callback(null, data);
-                    })
-                    .catch(error => {
-                        callback(error);
-                    });
-                }
-            };
-        }
-    });
-}
+// REMOVE: Laravel Echo and Pusher setup
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

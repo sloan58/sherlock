@@ -23,7 +23,7 @@ import { Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { SyncHistoryTable } from '@/components/NetworkSwitches/SyncHistoryTable';
-import TerminalComponent from '@/components/Terminal';
+import SSHTerminalComponent from '@/components/SSHTerminal';
 import {
     Table,
     TableBody,
@@ -510,9 +510,12 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
                             )}
 
                             {activeTab === "terminal" && (
-                                <TerminalComponent 
+                                <SSHTerminalComponent 
                                     networkSwitchId={switchData.id} 
                                     networkSwitchHost={switchData.host}
+                                    networkSwitchUsername={switchData.username}
+                                    networkSwitchPassword={switchData.password}
+                                    networkSwitchPort={parseInt(switchData.port)}
                                 />
                             )}
                         </div>

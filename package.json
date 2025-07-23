@@ -53,16 +53,22 @@
         "laravel-echo": "^2.1.7",
         "laravel-vite-plugin": "^1.0",
         "lucide-react": "^0.475.0",
+        "node-pty": "^1.0.0",
         "pusher-js": "^8.4.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
+        "react-xtermjs": "^1.0.10",
         "recharts": "^2.15.3",
         "sonner": "^2.0.5",
+        "ssh2": "^1.16.0",
         "tailwind-merge": "^3.0.1",
         "tailwindcss": "^4.0.0",
         "tailwindcss-animate": "^1.0.7",
         "typescript": "^5.7.2",
-        "vite": "^6.0"
+        "vite": "^6.0",
+        "ws": "^8.18.3",
+        "xterm-addon-fit": "^0.8.0",
+        "xterm-addon-web-links": "^0.9.0"
     },
     "optionalDependencies": {
         "@rollup/rollup-linux-x64-gnu": "4.9.5",

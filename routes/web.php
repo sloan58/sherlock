@@ -32,13 +32,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/network-switches/{networkSwitch}/sync-history', [NetworkSwitchController::class, 'getSyncHistory'])
         ->name('network-switches.sync-history');
 
-    // Terminal Routes
-    Route::prefix('terminal')->group(function () {
-        Route::post('{networkSwitch}/execute', [TerminalController::class, 'executeCommand'])->name('terminal.execute');
-        Route::post('{networkSwitch}/test', [TerminalController::class, 'testConnection'])->name('terminal.test');
-        Route::post('{networkSwitch}/close', [TerminalController::class, 'closeConnection'])->name('terminal.close');
-        Route::post('authorize', [TerminalController::class, 'authorize'])->name('terminal.authorize');
-    });
+
+
+    // Bare Terminal Test Route
+    Route::get('/terminal-bare-test', function () {
+        return Inertia::render('TerminalBareTest');
+    })->name('terminal.bare.test');
+
+    // REMOVE: Terminal Routes
+    // Route::prefix('terminal')->group(function () {
+    //     Route::post('{networkSwitch}/execute', [TerminalController::class, 'executeCommand'])->name('terminal.execute');
+    //     Route::post('{networkSwitch}/test', [TerminalController::class, 'testConnection'])->name('terminal.test');
+    //     Route::post('{networkSwitch}/close', [TerminalController::class, 'closeConnection'])->name('terminal.close');
+    // });
+    // Route::post('terminal/authorize', [TerminalController::class, 'authorize'])->name('terminal.authorize');
 });
 
 require __DIR__.'/settings.php';
