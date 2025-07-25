@@ -10,7 +10,6 @@ ingester:
       kvstore:
         store: inmemory
       replication_factor: 1
-    finalize: true
   chunk_idle_period: 1h
   max_chunk_age: 1h
   chunk_target_size: 1048576

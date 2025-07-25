@@ -3,7 +3,7 @@ set -e
 
 # Load Laravel-style .env file into shell environment
 # Wait for .env to be mounted
-ENV_PATH="/var/www/.env"
+ENV_PATH="/app/.env"
 echo "Waiting for $ENV_PATH to be available..."
 
 while [ ! -f "$ENV_PATH" ]; do
@@ -14,6 +14,9 @@ done
 set -a
 . "$ENV_PATH"
 set +a
+
+# Laravel production bootstrapping
+php artisan optimize
 
 # Wait for MySQL to start completely
 echo "Waiting for database DNS resolution for $DB_HOST..."
@@ -28,22 +31,11 @@ until nc -z "$DB_HOST" "$DB_PORT"; do
     sleep 2
 done
 
-# Laravel production bootstrapping
-php artisan optimize
-
-## Run migrations
+# Run migrations
 php artisan migrate --force
 
-# Laravel production bootstrapping
-php artisan optimize
-
-# Start cron
-service cron start
-
-# Generate supervisord config
-cp /etc/supervisord-base/base.conf /etc/supervisord.conf
-cat /etc/supervisord-base/web.conf >> /etc/supervisord.conf
-cat /etc/supervisord-base/queue.conf >> /etc/supervisord.conf
+# Seed the database
+php artisan db:seed --class=UserSeeder --force
 
 # Start supervisor
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

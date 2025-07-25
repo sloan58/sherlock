@@ -1,0 +1,130 @@
+services:
+  app:
+    image: kcr.karmatek.io/sherlock-app:latest
+    restart: unless-stopped
+    volumes:
+      - app_logs:./storage/logs
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=sherlock
+      - DB_USERNAME=sherlock
+      - DB_PASSWORD=password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+    networks:
+      - sherlock
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sherlock
+      MYSQL_USER: sherlock
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sherlock
+
+  nginx:
+    image: kcr.karmatek.io/sherlock-proxy:latest
+    restart: unless-stopped
+    ports:
+      - "8008:80"
+      - "8443:443"
+      #    volumes:
+      # Optional SSL certificates - uncomment and mount your certificates
+      # - ./path/to/your/cert.pem:/etc/nginx/ssl/cert.pem
+      # - ./path/to/your/key.pem:/etc/nginx/ssl/key.pem
+    networks:
+      - sherlock
+    depends_on:
+      - app
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - sherlock
+
+  websocket:
+    image: kcr.karmatek.io/sherlock-websocket:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - sherlock
+
+    # Logging Stack
+  fluent-bit:
+    image: fluent/fluent-bit:2.1
+    restart: unless-stopped
+    volumes:
+      - app_logs:/var/www/storage/logs:ro
+      - ./docker/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./docker/fluent-bit/parsers.conf:/fluent-bit/etc/parsers.conf
+    networks:
+      - sherlock
+    depends_on:
+      - loki
+
+  loki:
+    image: grafana/loki:2.9.0
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./docker/loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    networks:
+      - sherlock
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - sherlock
+    ports:
+      - "3000:3000"
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - sherlock
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+volumes:
+  app_logs:
+  mysql_data:
+  loki_data:
+  grafana_data:
+  minio_data:
+
+networks:
+  sherlock:
