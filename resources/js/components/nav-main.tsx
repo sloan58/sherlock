@@ -13,7 +13,6 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                         <SidebarMenuButton  
                             asChild isActive={page.url.startsWith(item.href)}
                             tooltip={{ children: item.title }}
-                            className={page.url.startsWith(item.href) ? "bg-gradient-to-br from-blue-500/10 to-blue-600/10" : ""}
                         >
                             <Link href={item.href} prefetch>
                                 {item.icon && <item.icon />}

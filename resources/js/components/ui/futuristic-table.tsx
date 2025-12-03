@@ -7,7 +7,7 @@ interface FuturisticTableProps extends React.HTMLAttributes<HTMLTableElement> {
 
 export function FuturisticTable({ className, children, ...props }: FuturisticTableProps) {
     return (
-        <div className="rounded-md border border-primary/20 bg-card/30 backdrop-blur-sm">
+        <div className="rounded-md border">
             <table className={cn("w-full", className)} {...props}>
                 {children}
             </table>

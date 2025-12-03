@@ -27,7 +27,9 @@ import {
     Clock,
     Copy,
     ExternalLink,
-    Info
+    Info,
+    ArrowUp,
+    ArrowDown
 } from 'lucide-react';
 import { DeviceStatusIndicator } from '@/components/ui/status-indicator';
 import {
@@ -80,6 +82,8 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
     const [typeFilter, setTypeFilter] = useState<'all' | 'dynamic' | 'static' | 'secure'>('all');
     const [vlanFilter, setVlanFilter] = useState<string>('');
     const [showTrunkAddresses, setShowTrunkAddresses] = useState(false);
+    const [sortColumn, setSortColumn] = useState<'vlan' | null>(null);
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
     
     // Check if there are trunk addresses to show (for toggle visibility)
     const hasTrunkAddresses = useMemo(() => {
@@ -169,8 +173,28 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
             filtered = filtered.filter(mac => mac.pivot?.vlan_id === vlanFilter);
         }
 
+        // Sort by VLAN
+        if (sortColumn === 'vlan') {
+            filtered = [...filtered].sort((a, b) => {
+                const vlanA = a.pivot?.vlan_id || '';
+                const vlanB = b.pivot?.vlan_id || '';
+                
+                // Handle numeric comparison if both are numbers
+                const numA = parseInt(vlanA, 10);
+                const numB = parseInt(vlanB, 10);
+                
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return sortDirection === 'asc' ? numA - numB : numB - numA;
+                }
+                
+                // Fallback to string comparison
+                const comparison = vlanA.localeCompare(vlanB);
+                return sortDirection === 'asc' ? comparison : -comparison;
+            });
+        }
+
         return filtered;
-    }, [displayMacAddresses, searchTerm, typeFilter, vlanFilter, getDeviceType]);
+    }, [displayMacAddresses, searchTerm, typeFilter, vlanFilter, sortColumn, sortDirection, getDeviceType]);
 
     const uniqueVlans = useMemo(() => {
         const vlans = new Set(displayMacAddresses.map(mac => mac.pivot?.vlan_id).filter((vlan): vlan is string => Boolean(vlan)));
@@ -430,7 +454,30 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                                     {visibleColumns.mac && <FuturisticTableHead className="min-w-32">MAC Address</FuturisticTableHead>}
                                     {visibleColumns.ports && <FuturisticTableHead className="min-w-24">Ports</FuturisticTableHead>}
                                     {visibleColumns.portMode && <FuturisticTableHead className="min-w-20">Port Mode</FuturisticTableHead>}
-                                    {visibleColumns.vlan && <FuturisticTableHead className="min-w-20">VLAN ID</FuturisticTableHead>}
+                                    {visibleColumns.vlan && (
+                                        <FuturisticTableHead 
+                                            className="min-w-20 cursor-pointer hover:bg-muted/50 select-none"
+                                            onClick={() => {
+                                                if (sortColumn === 'vlan') {
+                                                    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+                                                } else {
+                                                    setSortColumn('vlan');
+                                                    setSortDirection('asc');
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex items-center gap-1">
+                                                VLAN ID
+                                                {sortColumn === 'vlan' && (
+                                                    sortDirection === 'asc' ? (
+                                                        <ArrowUp className="h-3 w-3 text-primary" />
+                                                    ) : (
+                                                        <ArrowDown className="h-3 w-3 text-primary" />
+                                                    )
+                                                )}
+                                            </div>
+                                        </FuturisticTableHead>
+                                    )}
                                     {visibleColumns.type && <FuturisticTableHead className="min-w-24">Type</FuturisticTableHead>}
                                     {visibleColumns.manufacturer && <FuturisticTableHead className="min-w-32">Manufacturer</FuturisticTableHead>}
                                     {visibleColumns.deviceType && <FuturisticTableHead className="min-w-24">Device Type</FuturisticTableHead>}

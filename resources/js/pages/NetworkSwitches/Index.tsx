@@ -186,10 +186,10 @@ export default function Index({ switches, ...props }: Props) {
                 </div>
 
                 {/* Search and Filter Section */}
-                <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
+                <Card>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 font-mono text-primary">
-                            <Network className="h-5 w-5 text-primary" />
+                        <CardTitle className="flex items-center gap-2 font-mono">
+                            <Network className="h-5 w-5 text-muted-foreground" />
                             Network Devices
                         </CardTitle>
                     </CardHeader>

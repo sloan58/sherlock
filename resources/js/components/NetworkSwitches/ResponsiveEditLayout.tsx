@@ -139,9 +139,9 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
     return (
         <div className="flex h-full flex-1 flex-col gap-6 p-4">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 bg-card/50 backdrop-blur-sm rounded-xl border border-primary/20 shadow-lg shadow-primary/5">
+            <div className="flex items-center justify-between p-6">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="sm" asChild className="hover:bg-primary/10 text-primary/80">
+                    <Button variant="ghost" size="sm" asChild>
                         <Link href={route('network-switches.index')}>
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             Back
@@ -152,7 +152,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                             <Network className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold tracking-tight font-mono text-primary">
+                            <h1 className="text-2xl font-bold tracking-tight font-mono">
                                 Edit Network Switch
                             </h1>
                             <p className="text-muted-foreground">Configure device settings and monitor data collection</p>
@@ -167,38 +167,38 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
             {/* Main Content with Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
                 <div className="mb-6">
-                    <TabsList className="flex flex-col sm:flex-row gap-2 p-1 bg-card/50 backdrop-blur-sm rounded-xl border border-primary/20 h-auto">
+                    <TabsList className="flex flex-col sm:flex-row gap-2 p-1 h-auto">
                         <TabsTrigger 
                             value="device" 
-                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-primary/10 rounded-lg px-4 py-2.5 text-primary/80"
+                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Settings className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">Device</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="macs" 
-                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-primary/10 rounded-lg px-4 py-2.5 text-primary/80"
+                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Database className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">MAC Addresses</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="interfaces" 
-                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-primary/10 rounded-lg px-4 py-2.5 text-primary/80"
+                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Network className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">Interfaces</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="history" 
-                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-primary/10 rounded-lg px-4 py-2.5 text-primary/80"
+                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Clock className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">History</span>
                         </TabsTrigger>
                         <TabsTrigger 
                             value="terminal" 
-                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-primary/10 rounded-lg px-4 py-2.5 text-primary/80"
+                            className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Terminal className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">Terminal</span>
@@ -208,9 +208,9 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                 <div className="flex-1 overflow-hidden">
                     <TabsContent value="device" className="h-full">
-                        <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5 h-full">
-                            <CardHeader className="border-b border-primary/20">
-                                <CardTitle className="flex items-center gap-2 font-mono text-lg text-primary">
+                        <Card className="h-full">
+                            <CardHeader className="border-b">
+                                <CardTitle className="flex items-center gap-2 font-mono text-lg">
                                     <div className="p-2 bg-primary/20 rounded-lg">
                                         <Settings className="h-5 w-5 text-primary" />
                                     </div>
@@ -240,7 +240,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 value={data.host}
                                                 onChange={(e) => setData('host', e.target.value)}
                                                 required
-                                                className="border-primary/20 focus:border-primary bg-card/30"
+                                                className="focus:border-ring"
                                             />
                                             {errors.host && <p className="text-sm text-red-500">{errors.host}</p>}
                                         </div>
@@ -253,7 +253,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 value={data.username}
                                                 onChange={(e) => setData('username', e.target.value)}
                                                 required
-                                                className="border-primary/20 focus:border-primary bg-card/30"
+                                                className="focus:border-ring"
                                             />
                                             {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
                                         </div>
@@ -266,7 +266,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 value={data.password}
                                                 onChange={(e) => setData('password', e.target.value)}
                                                 required
-                                                className="border-primary/20 focus:border-primary bg-card/30"
+                                                className="focus:border-ring"
                                             />
                                             {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                                         </div>
@@ -277,7 +277,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 value={data.device_type}
                                                 onValueChange={(value: keyof typeof deviceTypes) => setData('device_type', value)}
                                             >
-                                                <SelectTrigger className="border-primary/20 focus:border-primary bg-card/30">
+                                                <SelectTrigger className="focus:border-ring">
                                                     <SelectValue placeholder="Select device type" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -298,7 +298,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 type="number" 
                                                 value={data.port} 
                                                 onChange={(e) => setData('port', e.target.value)}
-                                                className="border-primary/20 focus:border-primary bg-card/30"
+                                                className="focus:border-ring"
                                             />
                                             {errors.port && <p className="text-sm text-red-500">{errors.port}</p>}
                                         </div>
@@ -313,7 +313,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                             variant="outline"
                                             onClick={walkDevice} 
                                             disabled={networkSwitch.syncing}
-                                            className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
+                                            className="hover:bg-accent"
                                         >
                                             {networkSwitch.syncing ? (
                                                 <>
@@ -348,7 +348,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                 allMacAddresses={allMacAddresses}
                                 totalMacAddressesCount={totalMacAddressesCount}
                                 visibleMacAddressesCount={visibleMacAddressesCount}
-                                className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5 h-full"
+                                className="h-full"
                             />
                         </div>
                     </TabsContent>
@@ -357,15 +357,15 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                         <div className="h-full overflow-hidden">
                             <EnhancedInterfacesTable 
                                 interfaces={networkSwitch.interfaces || []}
-                                className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5 h-full"
+                                className="h-full"
                             />
                         </div>
                     </TabsContent>
 
                     <TabsContent value="history" className="h-full">
-                        <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5 h-full">
-                            <CardHeader className="border-b border-primary/20">
-                                <CardTitle className="flex items-center gap-2 font-mono text-lg text-primary">
+                        <Card className="h-full">
+                            <CardHeader className="border-b">
+                                <CardTitle className="flex items-center gap-2 font-mono text-lg">
                                     <div className="p-2 bg-primary/20 rounded-lg">
                                         <Clock className="h-5 w-5 text-primary" />
                                     </div>
