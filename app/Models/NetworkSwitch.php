@@ -51,13 +51,24 @@ class NetworkSwitch extends Model
     {
         return $this->macAddresses()
             ->wherePivot("ports", "!=", "CPU")
-            ->wherePivot("ports", "not like", "Po%")
             ->whereNotExists(function ($query) {
+                // Exclude MAC addresses on trunk interfaces
+                // Check both the mac_address_network_interface relationship and direct port matching
                 $query->select(\DB::raw(1))
-                    ->from('mac_address_network_interface')
-                    ->join('network_interfaces', 'mac_address_network_interface.network_interface_id', '=', 'network_interfaces.id')
-                    ->whereColumn('mac_address_network_interface.mac_address_id', 'mac_addresses.id')
-                    ->where('network_interfaces.mode', 'trunk');
+                    ->from('network_interfaces')
+                    ->where('network_interfaces.network_switch_id', $this->getAttribute('id'))
+                    ->where('network_interfaces.mode', 'trunk')
+                    ->where(function ($q) {
+                        // Match via mac_address_network_interface relationship
+                        $q->whereExists(function ($subQuery) {
+                            $subQuery->select(\DB::raw(1))
+                                ->from('mac_address_network_interface')
+                                ->whereColumn('mac_address_network_interface.network_interface_id', 'network_interfaces.id')
+                                ->whereColumn('mac_address_network_interface.mac_address_id', 'mac_addresses.id');
+                        })
+                        // OR match by interface_short from the ports pivot field
+                        ->orWhereColumn('network_interfaces.interface_short', 'mac_address_network_switch.ports');
+                    });
             });
     }
 

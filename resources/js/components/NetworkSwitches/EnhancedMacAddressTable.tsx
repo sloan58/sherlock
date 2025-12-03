@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,9 +26,17 @@ import {
     Shield, 
     Clock,
     Copy,
-    ExternalLink
+    ExternalLink,
+    Info
 } from 'lucide-react';
 import { DeviceStatusIndicator } from '@/components/ui/status-indicator';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface MacAddress {
     id: number;
@@ -46,30 +54,97 @@ interface MacAddress {
         created_at?: string;
         updated_at?: string;
     };
+    interface?: {
+        mode?: string;
+        neighbor_chassis_id?: string;
+        neighbor_name?: string;
+        neighbor_mgmt_address?: string;
+        neighbor_platform?: string;
+        neighbor_interface?: string;
+        neighbor_description?: string;
+        neighbor_interface_ip?: string;
+        neighbor_capabilities?: string;
+    };
 }
 
 interface EnhancedMacAddressTableProps {
     macAddresses: MacAddress[];
+    allMacAddresses?: MacAddress[];
+    totalMacAddressesCount?: number;
+    visibleMacAddressesCount?: number;
     className?: string;
 }
 
-export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMacAddressTableProps) {
+export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount, className }: EnhancedMacAddressTableProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [typeFilter, setTypeFilter] = useState<'all' | 'dynamic' | 'static' | 'secure'>('all');
     const [vlanFilter, setVlanFilter] = useState<string>('');
+    const [showTrunkAddresses, setShowTrunkAddresses] = useState(false);
+    
+    // Check if there are trunk addresses to show (for toggle visibility)
+    const hasTrunkAddresses = useMemo(() => {
+        // If we have counts, use them for comparison
+        if (totalMacAddressesCount !== undefined && visibleMacAddressesCount !== undefined) {
+            return totalMacAddressesCount > visibleMacAddressesCount;
+        }
+        // Otherwise check array lengths
+        if (!allMacAddresses || allMacAddresses.length === 0) return false;
+        return allMacAddresses.length > macAddresses.length;
+    }, [macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount]);
+    
+    // Use allMacAddresses when toggle is on, otherwise use filtered macAddresses
+    const displayMacAddresses = useMemo(() => {
+        return showTrunkAddresses && allMacAddresses ? allMacAddresses : macAddresses;
+    }, [showTrunkAddresses, allMacAddresses, macAddresses]);
+    
     const [visibleColumns, setVisibleColumns] = useState({
         mac: true,
         ports: true,
+        portMode: true,
         vlan: true,
         type: true,
         manufacturer: true,
+        deviceType: true,
+        vlanSegment: true,
+        cdpInfo: true,
         age: true,
         secure: true,
         comment: true
     });
 
+    const getDeviceType = useCallback((mac: MacAddress): string => {
+        const manufacturer = mac.pivot?.manufacturer;
+        if (!manufacturer) return '-';
+        
+        const manufacturerUpper = manufacturer.toUpperCase();
+        
+        // Check for Cisco - use CDP neighbor data if available
+        if (manufacturerUpper.includes('CISCO')) {
+            const cdpData = mac.interface;
+            if (cdpData && cdpData.neighbor_platform) {
+                // Return the neighbor platform when CDP information is available
+                return cdpData.neighbor_platform;
+            }
+            // If Cisco but no CDP data, return generic
+            return 'Network Device';
+        }
+        
+        // Non-Cisco manufacturers
+        if (manufacturerUpper.includes('PALOALTO')) {
+            return 'FireWall';
+        }
+        if (manufacturerUpper.includes('VMWARE')) {
+            return 'Server';
+        }
+        if (manufacturerUpper.includes('HEWLETTP')) {
+            return 'Printer';
+        }
+        
+        return '-';
+    }, []);
+
     const filteredMacAddresses = useMemo(() => {
-        let filtered = macAddresses;
+        let filtered = displayMacAddresses;
 
         // Search filter
         if (searchTerm) {
@@ -79,6 +154,7 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                 mac.pivot?.ports?.toLowerCase().includes(searchLower) ||
                 mac.pivot?.vlan_id?.toLowerCase().includes(searchLower) ||
                 mac.pivot?.manufacturer?.toLowerCase().includes(searchLower) ||
+                getDeviceType(mac).toLowerCase().includes(searchLower) ||
                 mac.pivot?.comment?.toLowerCase().includes(searchLower)
             );
         }
@@ -94,12 +170,12 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
         }
 
         return filtered;
-    }, [macAddresses, searchTerm, typeFilter, vlanFilter]);
+    }, [displayMacAddresses, searchTerm, typeFilter, vlanFilter, getDeviceType]);
 
     const uniqueVlans = useMemo(() => {
-        const vlans = new Set(macAddresses.map(mac => mac.pivot?.vlan_id).filter(Boolean));
+        const vlans = new Set(displayMacAddresses.map(mac => mac.pivot?.vlan_id).filter((vlan): vlan is string => Boolean(vlan)));
         return Array.from(vlans).sort();
-    }, [macAddresses]);
+    }, [displayMacAddresses]);
 
     const getTypeBadge = (type?: string) => {
         if (!type) return <Badge variant="outline">Unknown</Badge>;
@@ -132,6 +208,88 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
         );
     };
 
+    const getVlanSegment = (manufacturer?: string): string => {
+        if (!manufacturer) return '-';
+        
+        const manufacturerUpper = manufacturer.toUpperCase();
+        
+        if (manufacturerUpper.includes('CISCO')) {
+            return '100';
+        }
+        if (manufacturerUpper.includes('PALOALTO')) {
+            return '200';
+        }
+        if (manufacturerUpper.includes('HEWLETTP')) {
+            return '300';
+        }
+        
+        return '-';
+    };
+
+    const hasCdpInfo = (mac: MacAddress): boolean => {
+        const cdpData = mac.interface;
+        return !!(
+            cdpData &&
+            (cdpData.neighbor_chassis_id ||
+                cdpData.neighbor_name ||
+                cdpData.neighbor_mgmt_address ||
+                cdpData.neighbor_platform ||
+                cdpData.neighbor_interface ||
+                cdpData.neighbor_description ||
+                cdpData.neighbor_interface_ip ||
+                cdpData.neighbor_capabilities)
+        );
+    };
+
+    const renderCdpInfo = (mac: MacAddress) => {
+        if (!hasCdpInfo(mac)) {
+            return <span className="text-muted-foreground">-</span>;
+        }
+
+        const cdpData = mac.interface!;
+        const cdpFields = [
+            { label: 'Chassis ID', value: cdpData.neighbor_chassis_id },
+            { label: 'Name', value: cdpData.neighbor_name },
+            { label: 'Platform', value: cdpData.neighbor_platform },
+            { label: 'Interface', value: cdpData.neighbor_interface },
+            { label: 'Description', value: cdpData.neighbor_description },
+            { label: 'Management Address', value: cdpData.neighbor_mgmt_address },
+            { label: 'Interface IP', value: cdpData.neighbor_interface_ip },
+            { label: 'Capabilities', value: cdpData.neighbor_capabilities },
+        ].filter(field => field.value);
+
+        return (
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-primary/10"
+                    >
+                        <Info className="h-4 w-4 text-primary" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="start">
+                    <div className="space-y-3">
+                        <div className="font-semibold text-sm">CDP Neighbor Information</div>
+                        <div className="space-y-2">
+                            {cdpFields.map((field, index) => (
+                                <div key={index} className="text-sm">
+                                    <div className="font-medium text-muted-foreground mb-0.5">
+                                        {field.label}
+                                    </div>
+                                    <div className="font-mono text-xs break-all">
+                                        {field.value}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </PopoverContent>
+            </Popover>
+        );
+    };
+
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
     };
@@ -142,7 +300,7 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                 <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2 font-mono">
                         <Database className="h-5 w-5" />
-                        MAC Addresses ({filteredMacAddresses.length} of {macAddresses.length})
+                        MAC Addresses ({filteredMacAddresses.length} of {displayMacAddresses.length})
                     </CardTitle>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -175,14 +333,32 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                         <div className="relative flex-1 min-w-0">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
-                                placeholder="Search MAC addresses, ports, VLAN, manufacturer..."
+                                placeholder="Search MAC addresses, ports, VLAN, manufacturer, device type..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
                             />
                         </div>
                         
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex gap-2 flex-wrap items-center">
+                            {/* Show Trunk Addresses Toggle */}
+                            {(hasTrunkAddresses || (allMacAddresses && allMacAddresses.length > 0 && totalMacAddressesCount !== undefined && visibleMacAddressesCount !== undefined && totalMacAddressesCount > visibleMacAddressesCount)) && (
+                                <div className="flex items-center gap-2 px-3 py-1.5 border rounded-md bg-background">
+                                    <Checkbox
+                                        id="show-trunk-addresses"
+                                        checked={showTrunkAddresses}
+                                        onCheckedChange={(checked) => {
+                                            setShowTrunkAddresses(!!checked);
+                                        }}
+                                    />
+                                    <Label
+                                        htmlFor="show-trunk-addresses"
+                                        className="text-sm font-normal cursor-pointer"
+                                    >
+                                        Show trunk addresses
+                                    </Label>
+                                </div>
+                            )}
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" size="sm">
@@ -253,9 +429,13 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                         <FuturisticTableRow>
                                     {visibleColumns.mac && <FuturisticTableHead className="min-w-32">MAC Address</FuturisticTableHead>}
                                     {visibleColumns.ports && <FuturisticTableHead className="min-w-24">Ports</FuturisticTableHead>}
+                                    {visibleColumns.portMode && <FuturisticTableHead className="min-w-20">Port Mode</FuturisticTableHead>}
                                     {visibleColumns.vlan && <FuturisticTableHead className="min-w-20">VLAN ID</FuturisticTableHead>}
                                     {visibleColumns.type && <FuturisticTableHead className="min-w-24">Type</FuturisticTableHead>}
                                     {visibleColumns.manufacturer && <FuturisticTableHead className="min-w-32">Manufacturer</FuturisticTableHead>}
+                                    {visibleColumns.deviceType && <FuturisticTableHead className="min-w-24">Device Type</FuturisticTableHead>}
+                                    {visibleColumns.vlanSegment && <FuturisticTableHead className="min-w-24">VLAN Segment</FuturisticTableHead>}
+                                    {visibleColumns.cdpInfo && <FuturisticTableHead className="min-w-20">CDP Info</FuturisticTableHead>}
                                     {visibleColumns.age && <FuturisticTableHead className="min-w-20">Age</FuturisticTableHead>}
                                     {visibleColumns.secure && <FuturisticTableHead className="min-w-24">Security</FuturisticTableHead>}
                                     {visibleColumns.comment && <FuturisticTableHead className="min-w-32">Comment</FuturisticTableHead>}
@@ -282,7 +462,7 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                                     </FuturisticTableRow>
                                 ) : (
                                     filteredMacAddresses.map((mac, idx) => (
-                                        <FuturisticTableRow key={`${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}-${idx}`} className="hover:bg-muted/50">
+                                        <FuturisticTableRow key={`${showTrunkAddresses ? 'all' : 'filtered'}-${mac.id}-${mac.pivot?.ports ?? ''}-${mac.pivot?.vlan_id ?? ''}-${idx}`} className="hover:bg-muted/50">
                                             {visibleColumns.mac && (
                                                 <FuturisticTableCell className="font-mono text-sm">
                                                     <div className="flex items-center gap-2">
@@ -301,6 +481,24 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                                             {visibleColumns.ports && (
                                                 <FuturisticTableCell className="font-mono text-sm max-w-24 truncate">{mac.pivot?.ports ?? '-'}</FuturisticTableCell>
                                             )}
+                                            {visibleColumns.portMode && (
+                                                <FuturisticTableCell>
+                                                    {mac.interface?.mode ? (
+                                                        <Badge 
+                                                            variant={mac.interface.mode.toLowerCase() === 'trunk' ? 'secondary' : 'outline'}
+                                                            className={
+                                                                mac.interface.mode.toLowerCase() === 'trunk' 
+                                                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                                                                    : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                                            }
+                                                        >
+                                                            {mac.interface.mode}
+                                                        </Badge>
+                                                    ) : (
+                                                        <span className="text-muted-foreground">-</span>
+                                                    )}
+                                                </FuturisticTableCell>
+                                            )}
                                             {visibleColumns.vlan && (
                                                 <FuturisticTableCell className="font-mono text-sm">{mac.pivot?.vlan_id ?? '-'}</FuturisticTableCell>
                                             )}
@@ -309,6 +507,17 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                                             )}
                                             {visibleColumns.manufacturer && (
                                                 <FuturisticTableCell className="font-mono text-sm max-w-32 truncate">{mac.pivot?.manufacturer ?? '-'}</FuturisticTableCell>
+                                            )}
+                                            {visibleColumns.deviceType && (
+                                                <FuturisticTableCell className="text-sm">{getDeviceType(mac)}</FuturisticTableCell>
+                                            )}
+                                            {visibleColumns.vlanSegment && (
+                                                <FuturisticTableCell className="text-sm font-mono">{getVlanSegment(mac.pivot?.manufacturer)}</FuturisticTableCell>
+                                            )}
+                                            {visibleColumns.cdpInfo && (
+                                                <FuturisticTableCell>
+                                                    {renderCdpInfo(mac)}
+                                                </FuturisticTableCell>
                                             )}
                                             {visibleColumns.age && (
                                                 <FuturisticTableCell className="text-sm">{mac.pivot?.age ?? '-'}</FuturisticTableCell>
@@ -347,7 +556,7 @@ export function EnhancedMacAddressTable({ macAddresses, className }: EnhancedMac
                     {filteredMacAddresses.length > 0 && (
                         <div className="flex items-center justify-between text-sm text-muted-foreground">
                             <span>
-                                Showing {filteredMacAddresses.length} of {macAddresses.length} MAC addresses
+                                Showing {filteredMacAddresses.length} of {displayMacAddresses.length} MAC addresses
                             </span>
                             {(searchTerm || typeFilter !== 'all' || vlanFilter) && (
                                 <span>

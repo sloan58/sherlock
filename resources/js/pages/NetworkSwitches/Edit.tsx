@@ -38,14 +38,28 @@ interface MacAddress {
         created_at?: string;
         updated_at?: string;
     };
+    interface?: {
+        mode?: string;
+        neighbor_chassis_id?: string;
+        neighbor_name?: string;
+        neighbor_mgmt_address?: string;
+        neighbor_platform?: string;
+        neighbor_interface?: string;
+        neighbor_description?: string;
+        neighbor_interface_ip?: string;
+        neighbor_capabilities?: string;
+    };
 }
 
 interface Props extends PageProps {
     switch: NetworkSwitch;
     macAddresses: MacAddress[];
+    allMacAddresses?: MacAddress[];
+    totalMacAddressesCount?: number;
+    visibleMacAddressesCount?: number;
 }
 
-export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
+export default function Edit({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount }: Props) {
     const [switchData, setSwitchData] = useState(networkSwitch);
 
     useEffect(() => {
@@ -78,6 +92,9 @@ export default function Edit({ switch: networkSwitch, macAddresses }: Props) {
             <ResponsiveEditLayout 
                 switch={switchData} 
                 macAddresses={macAddresses}
+                allMacAddresses={allMacAddresses}
+                totalMacAddressesCount={totalMacAddressesCount}
+                visibleMacAddressesCount={visibleMacAddressesCount}
                 errors={{}}
             />
         </AppLayout>

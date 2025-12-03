@@ -264,7 +264,12 @@ export default function Index({ switches, ...props }: Props) {
                                         filteredSwitches.map((switch_) => (
                                             <FuturisticTableRow key={switch_.id}>
                                                 <FuturisticTableCell className="font-mono text-sm font-medium">
-                                                    {switch_.host}
+                                                    <Link 
+                                                        href={route('network-switches.edit', { network_switch: switch_.id })}
+                                                        className="text-primary hover:text-primary/80 hover:underline transition-colors"
+                                                    >
+                                                        {switch_.host}
+                                                    </Link>
                                                 </FuturisticTableCell>
                                                 <FuturisticTableCell className="font-mono text-sm">
                                                     {switch_.hostname ?? '-'}

@@ -70,15 +70,29 @@ interface MacAddress {
         created_at?: string;
         updated_at?: string;
     };
+    interface?: {
+        mode?: string;
+        neighbor_chassis_id?: string;
+        neighbor_name?: string;
+        neighbor_mgmt_address?: string;
+        neighbor_platform?: string;
+        neighbor_interface?: string;
+        neighbor_description?: string;
+        neighbor_interface_ip?: string;
+        neighbor_capabilities?: string;
+    };
 }
 
 interface Props {
     switch: NetworkSwitch;
     macAddresses: MacAddress[];
+    allMacAddresses?: MacAddress[];
+    totalMacAddressesCount?: number;
+    visibleMacAddressesCount?: number;
     errors: any;
 }
 
-export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, errors }: Props) {
+export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount, errors }: Props) {
     const [activeTab, setActiveTab] = useState("device");
     const { data, setData, processing, submit } = useForm({
         host: networkSwitch.host,
@@ -331,6 +345,9 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, erro
                         <div className="h-full overflow-hidden">
                             <EnhancedMacAddressTable 
                                 macAddresses={macAddresses}
+                                allMacAddresses={allMacAddresses}
+                                totalMacAddressesCount={totalMacAddressesCount}
+                                visibleMacAddressesCount={visibleMacAddressesCount}
                                 className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5 h-full"
                             />
                         </div>

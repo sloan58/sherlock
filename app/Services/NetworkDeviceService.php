@@ -78,7 +78,7 @@ class NetworkDeviceService
 
         // Execute Python script with JSON input
         $process = [
-            base_path('lib/.venv/bin/python'),
+            base_path('lib/python/.venv/bin/python'),
             base_path('lib/python/mac_lookup.py'),
         ];
 

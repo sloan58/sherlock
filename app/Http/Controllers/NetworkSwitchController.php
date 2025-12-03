@@ -62,15 +62,99 @@ class NetworkSwitchController extends Controller
                     'updated_at',
                 ]);
             },
-            'interfaces',
+            'macAddresses' => function ($q) {
+                $q->withPivot([
+                    'vlan_id',
+                    'type',
+                    'age',
+                    'secure',
+                    'ntfy',
+                    'ports',
+                    'manufacturer',
+                    'comment',
+                    'created_at',
+                    'updated_at',
+                ]);
+            },
+            'interfaces' => function ($q) {
+                $q->select([
+                    'id',
+                    'network_switch_id',
+                    'interface',
+                    'interface_short',
+                    'link_status',
+                    'admin_state',
+                    'description',
+                    'mode',
+                    'vlan_id',
+                    'mac_address',
+                    'ip_address',
+                    'speed',
+                    'duplex',
+                    'neighbor_chassis_id',
+                    'neighbor_name',
+                    'neighbor_mgmt_address',
+                    'neighbor_platform',
+                    'neighbor_interface',
+                    'neighbor_description',
+                    'neighbor_interface_ip',
+                    'neighbor_capabilities',
+                ]);
+            },
         ]);
 
         $switchArray = $networkSwitch->toArray();
-        $switchArray['interfaces'] = $networkSwitch->interfaces->toArray();
+        // Map interfaces and add admin_status alias for frontend compatibility
+        $switchArray['interfaces'] = $networkSwitch->interfaces->map(function ($interface) {
+            $interfaceArray = $interface->toArray();
+            $interfaceArray['admin_status'] = $interface->admin_state;
+            return $interfaceArray;
+        })->toArray();
+
+        // Helper function to attach interface/CDP data to MAC addresses
+        $attachInterfaceData = function ($macAddress) use ($networkSwitch) {
+            $macArray = $macAddress->toArray();
+            $port = $macAddress->pivot->ports;
+            
+            // Find matching interface by port
+            if ($port) {
+                $interface = $networkSwitch->interfaces->firstWhere('interface_short', $port);
+                if ($interface) {
+                    $macArray['interface'] = [
+                        'mode' => $interface->mode,
+                        'neighbor_chassis_id' => $interface->neighbor_chassis_id,
+                        'neighbor_name' => $interface->neighbor_name,
+                        'neighbor_mgmt_address' => $interface->neighbor_mgmt_address,
+                        'neighbor_platform' => $interface->neighbor_platform,
+                        'neighbor_interface' => $interface->neighbor_interface,
+                        'neighbor_description' => $interface->neighbor_description,
+                        'neighbor_interface_ip' => $interface->neighbor_interface_ip,
+                        'neighbor_capabilities' => $interface->neighbor_capabilities,
+                    ];
+                }
+            }
+            
+            return $macArray;
+        };
+
+        // Get all MAC addresses (excluding only CPU, but including trunk)
+        $allMacAddresses = $networkSwitch->macAddresses()
+            ->wherePivot("ports", "!=", "CPU")
+            ->get()
+            ->map($attachInterfaceData);
+        
+        // Filter out trunk addresses for the visible/filtered list
+        $macAddresses = collect($allMacAddresses)->filter(function ($mac) {
+            // Exclude if the interface mode is 'trunk'
+            return !isset($mac['interface']['mode']) || strtolower($mac['interface']['mode']) !== 'trunk';
+        })->values()->all();
 
         return Inertia::render('NetworkSwitches/Edit', [
             'switch' => $switchArray,
-            'macAddresses' => $networkSwitch->visibleMacAddresses,
+            'macAddresses' => $macAddresses,
+            'allMacAddresses' => $allMacAddresses,
+            'totalMacAddressesCount' => count($allMacAddresses),
+            'visibleMacAddressesCount' => count($macAddresses),
         ]);
     }
 

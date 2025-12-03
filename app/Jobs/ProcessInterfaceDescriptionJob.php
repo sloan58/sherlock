@@ -31,8 +31,6 @@ class ProcessInterfaceDescriptionJob implements ShouldQueue
         $interface = $this->networkSwitch->interfaces()
             ->where('interface', $this->descData['port'])
             ->first();
-        if ($interface) {
-            $interface->update(['description' => $this->descData['description']]);
-        }
+        $interface?->update(['description' => $this->descData['description']]);
     }
 }
