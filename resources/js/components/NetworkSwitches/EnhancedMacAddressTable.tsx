@@ -39,6 +39,13 @@ import {
 } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 
 interface MacAddress {
     id: number;
@@ -84,6 +91,8 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
     const [showTrunkAddresses, setShowTrunkAddresses] = useState(false);
     const [sortColumn, setSortColumn] = useState<'vlan' | null>(null);
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+    const [selectedMacAddress, setSelectedMacAddress] = useState<MacAddress | null>(null);
+    const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
     
     // Check if there are trunk addresses to show (for toggle visibility)
     const hasTrunkAddresses = useMemo(() => {
@@ -318,6 +327,11 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
         navigator.clipboard.writeText(text);
     };
 
+    const openDetailDialog = (mac: MacAddress) => {
+        setSelectedMacAddress(mac);
+        setIsDetailDialogOpen(true);
+    };
+
     return (
         <Card className={className}>
             <CardHeader>
@@ -447,8 +461,8 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                     </div>
 
                     {/* Enhanced Table */}
-                    <div className="rounded-md border overflow-x-auto">
-                                        <FuturisticTable>
+                    <div className="rounded-md border overflow-x-auto w-full">
+                                        <FuturisticTable className="min-w-full">
                     <FuturisticTableHeader>
                         <FuturisticTableRow>
                                     {visibleColumns.mac && <FuturisticTableHead className="min-w-32">MAC Address</FuturisticTableHead>}
@@ -526,7 +540,7 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                                                 </FuturisticTableCell>
                                             )}
                                             {visibleColumns.ports && (
-                                                <FuturisticTableCell className="font-mono text-sm max-w-24 truncate">{mac.pivot?.ports ?? '-'}</FuturisticTableCell>
+                                                <FuturisticTableCell className="font-mono text-sm whitespace-nowrap">{mac.pivot?.ports ?? '-'}</FuturisticTableCell>
                                             )}
                                             {visibleColumns.portMode && (
                                                 <FuturisticTableCell>
@@ -553,7 +567,7 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                                                 <FuturisticTableCell>{getTypeBadge(mac.pivot?.type)}</FuturisticTableCell>
                                             )}
                                             {visibleColumns.manufacturer && (
-                                                <FuturisticTableCell className="font-mono text-sm max-w-32 truncate">{mac.pivot?.manufacturer ?? '-'}</FuturisticTableCell>
+                                                <FuturisticTableCell className="font-mono text-sm whitespace-nowrap">{mac.pivot?.manufacturer ?? '-'}</FuturisticTableCell>
                                             )}
                                             {visibleColumns.deviceType && (
                                                 <FuturisticTableCell className="text-sm">{getDeviceType(mac)}</FuturisticTableCell>
@@ -573,24 +587,35 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                                                 <FuturisticTableCell>{getSecureBadge(mac.pivot?.secure)}</FuturisticTableCell>
                                             )}
                                             {visibleColumns.comment && (
-                                                <FuturisticTableCell className="text-sm max-w-32 truncate">{mac.pivot?.comment ?? '-'}</FuturisticTableCell>
+                                                <FuturisticTableCell className="text-sm whitespace-nowrap">{mac.pivot?.comment ?? '-'}</FuturisticTableCell>
                                             )}
                                             <FuturisticTableCell className="text-right">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <ExternalLink className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuCheckboxItem onClick={() => copyToClipboard(mac.mac_address)}>
-                                                            Copy MAC Address
-                                                        </DropdownMenuCheckboxItem>
-                                                        <DropdownMenuCheckboxItem onClick={() => copyToClipboard(mac.pivot?.ports || '')}>
-                                                            Copy Port
-                                                        </DropdownMenuCheckboxItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => openDetailDialog(mac)}
+                                                        className="h-8 px-2"
+                                                    >
+                                                        <Info className="h-4 w-4 mr-1" />
+                                                        Details
+                                                    </Button>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="sm">
+                                                                <ExternalLink className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuCheckboxItem onClick={() => copyToClipboard(mac.mac_address)}>
+                                                                Copy MAC Address
+                                                            </DropdownMenuCheckboxItem>
+                                                            <DropdownMenuCheckboxItem onClick={() => copyToClipboard(mac.pivot?.ports || '')}>
+                                                                Copy Port
+                                                            </DropdownMenuCheckboxItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </div>
                                             </FuturisticTableCell>
                                         </FuturisticTableRow>
                                     ))
@@ -618,6 +643,214 @@ export function EnhancedMacAddressTable({ macAddresses, allMacAddresses, totalMa
                     )}
                 </div>
             </CardContent>
+
+            {/* MAC Address Detail Dialog */}
+            <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="font-mono">MAC Address Details</DialogTitle>
+                        <DialogDescription>
+                            Complete information for {selectedMacAddress?.mac_address}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedMacAddress && (
+                        <div className="space-y-6 py-4">
+                            {/* Basic Information */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Basic Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">MAC Address</Label>
+                                        <div className="font-mono text-sm mt-1 flex items-center gap-2">
+                                            {selectedMacAddress.mac_address}
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => copyToClipboard(selectedMacAddress.mac_address)}
+                                                className="h-6 w-6 p-0"
+                                            >
+                                                <Copy className="h-3 w-3" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Vendor</Label>
+                                        <div className="text-sm mt-1">{selectedMacAddress.vendor || '-'}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Port Information */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Port Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Ports</Label>
+                                        <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.pivot?.ports || '-'}</div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Port Mode</Label>
+                                        <div className="text-sm mt-1">
+                                            {selectedMacAddress.interface?.mode ? (
+                                                <Badge 
+                                                    variant={selectedMacAddress.interface.mode.toLowerCase() === 'trunk' ? 'secondary' : 'outline'}
+                                                    className={
+                                                        selectedMacAddress.interface.mode.toLowerCase() === 'trunk' 
+                                                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                                                            : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                                                    }
+                                                >
+                                                    {selectedMacAddress.interface.mode}
+                                                </Badge>
+                                            ) : (
+                                                <span className="text-muted-foreground">-</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* VLAN Information */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">VLAN Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">VLAN ID</Label>
+                                        <div className="font-mono text-sm mt-1">{selectedMacAddress.pivot?.vlan_id || '-'}</div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">VLAN Segment</Label>
+                                        <div className="font-mono text-sm mt-1">{getVlanSegment(selectedMacAddress.pivot?.manufacturer)}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Device Information */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Device Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Manufacturer</Label>
+                                        <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.pivot?.manufacturer || '-'}</div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Device Type</Label>
+                                        <div className="text-sm mt-1">{getDeviceType(selectedMacAddress)}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Type and Security */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Type & Security</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Type</Label>
+                                        <div className="text-sm mt-1">{getTypeBadge(selectedMacAddress.pivot?.type)}</div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Security</Label>
+                                        <div className="text-sm mt-1">{getSecureBadge(selectedMacAddress.pivot?.secure) || '-'}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* CDP Neighbor Information */}
+                            {hasCdpInfo(selectedMacAddress) && (
+                                <div className="space-y-3">
+                                    <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">CDP Neighbor Information</h3>
+                                    <div className="space-y-3">
+                                        {selectedMacAddress.interface?.neighbor_chassis_id && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Chassis ID</Label>
+                                                <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_chassis_id}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_name && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Neighbor Name</Label>
+                                                <div className="text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_name}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_platform && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Platform</Label>
+                                                <div className="text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_platform}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_interface && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Neighbor Interface</Label>
+                                                <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_interface}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_description && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Description</Label>
+                                                <div className="text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_description}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_mgmt_address && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Management Address</Label>
+                                                <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_mgmt_address}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_interface_ip && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Interface IP</Label>
+                                                <div className="font-mono text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_interface_ip}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.interface?.neighbor_capabilities && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Capabilities</Label>
+                                                <div className="text-sm mt-1 break-all">{selectedMacAddress.interface.neighbor_capabilities}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Additional Information */}
+                            <div className="space-y-3">
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Additional Information</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Age</Label>
+                                        <div className="text-sm mt-1">{selectedMacAddress.pivot?.age || '-'}</div>
+                                    </div>
+                                    <div>
+                                        <Label className="text-xs text-muted-foreground">Comment</Label>
+                                        <div className="text-sm mt-1 break-all">{selectedMacAddress.pivot?.comment || '-'}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Timestamps */}
+                            {(selectedMacAddress.pivot?.created_at || selectedMacAddress.pivot?.updated_at) && (
+                                <div className="space-y-3">
+                                    <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Timestamps</h3>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {selectedMacAddress.pivot?.created_at && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Created At</Label>
+                                                <div className="text-sm mt-1">{new Date(selectedMacAddress.pivot.created_at).toLocaleString()}</div>
+                                            </div>
+                                        )}
+                                        {selectedMacAddress.pivot?.updated_at && (
+                                            <div>
+                                                <Label className="text-xs text-muted-foreground">Updated At</Label>
+                                                <div className="text-sm mt-1">{new Date(selectedMacAddress.pivot.updated_at).toLocaleString()}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </Card>
     );
 } 

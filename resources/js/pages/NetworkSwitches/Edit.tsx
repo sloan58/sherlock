@@ -12,6 +12,7 @@ const deviceTypes = {
 
 interface NetworkSwitch {
     id: number;
+    site_id: number | null;
     host: string;
     hostname: string | null;
     username: string;
@@ -20,6 +21,11 @@ interface NetworkSwitch {
     port: string;
     syncing: boolean;
     interfaces?: never[];
+    site?: {
+        id: number;
+        name: string;
+        code: string | null;
+    } | null;
 }
 
 interface MacAddress {
@@ -51,15 +57,22 @@ interface MacAddress {
     };
 }
 
+interface Site {
+    id: number;
+    name: string;
+    code: string | null;
+}
+
 interface Props extends PageProps {
     switch: NetworkSwitch;
     macAddresses: MacAddress[];
     allMacAddresses?: MacAddress[];
     totalMacAddressesCount?: number;
     visibleMacAddressesCount?: number;
+    sites?: Site[];
 }
 
-export default function Edit({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount }: Props) {
+export default function Edit({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount, sites = [] }: Props) {
     const [switchData, setSwitchData] = useState(networkSwitch);
 
     useEffect(() => {
@@ -95,6 +108,7 @@ export default function Edit({ switch: networkSwitch, macAddresses, allMacAddres
                 allMacAddresses={allMacAddresses}
                 totalMacAddressesCount={totalMacAddressesCount}
                 visibleMacAddressesCount={visibleMacAddressesCount}
+                sites={sites}
                 errors={{}}
             />
         </AppLayout>

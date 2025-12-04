@@ -26,6 +26,9 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Site Routes
+    Route::resource('sites', \App\Http\Controllers\SiteController::class);
+
     // Network Switch Routes
     Route::resource('network-switches', NetworkSwitchController::class);
     Route::post('network-switches/{networkSwitch}/walk', [NetworkSwitchController::class, 'walk'])->name('network-switches.walk');

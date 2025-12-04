@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Jobs\WalkDeviceJob;
 use Illuminate\Http\Request;
 use App\Models\NetworkSwitch;
+use App\Models\Site;
 use Illuminate\Http\RedirectResponse;
 
 class NetworkSwitchController extends Controller
@@ -15,7 +16,7 @@ class NetworkSwitchController extends Controller
     {
         return Inertia::render('NetworkSwitches/Index', [
             'switches' => NetworkSwitch::withCount(['interfaces', 'macAddresses'])
-                ->with('lastSyncHistory')
+                ->with(['lastSyncHistory', 'site'])
                 ->latest()
                 ->paginate(10)
         ]);
@@ -23,12 +24,15 @@ class NetworkSwitchController extends Controller
 
     public function create()
     {
-        return Inertia::render('NetworkSwitches/Create');
+        return Inertia::render('NetworkSwitches/Create', [
+            'sites' => Site::orderBy('name')->get()
+        ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'site_id' => 'nullable|exists:sites,id',
             'host' => 'required|string|max:255',
             'hostname' => 'nullable|string|max:255',
             'username' => 'required|string|max:255',
@@ -47,6 +51,7 @@ class NetworkSwitchController extends Controller
 
     public function edit(NetworkSwitch $networkSwitch)
     {
+        $networkSwitch->load('site');
         $networkSwitch->load([
             'visibleMacAddresses' => function ($q) {
                 $q->withPivot([
@@ -155,12 +160,14 @@ class NetworkSwitchController extends Controller
             'allMacAddresses' => $allMacAddresses,
             'totalMacAddressesCount' => count($allMacAddresses),
             'visibleMacAddressesCount' => count($macAddresses),
+            'sites' => Site::orderBy('name')->get(),
         ]);
     }
 
     public function update(Request $request, NetworkSwitch $networkSwitch)
     {
         $validated = $request->validate([
+            'site_id' => 'nullable|exists:sites,id',
             'host' => 'required|string|max:255',
             'hostname' => 'nullable|string|max:255',
             'username' => 'required|string|max:255',

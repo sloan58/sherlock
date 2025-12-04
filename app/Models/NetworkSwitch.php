@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class NetworkSwitch extends Model
 {
     protected $fillable = [
+        'site_id',
         'host',
         'hostname',
         'username',
@@ -86,5 +88,10 @@ class NetworkSwitch extends Model
     public function lastSyncHistory()
     {
         return $this->hasOne(DeviceSyncHistory::class)->latest();
+    }
+
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class);
     }
 }

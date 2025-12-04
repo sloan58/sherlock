@@ -27,8 +27,19 @@ const deviceTypes = {
     cisco_nxos: 'Cisco NXOS',
 } as const;
 
-export default function Create({ ...props }: PageProps) {
+interface Site {
+    id: number;
+    name: string;
+    code: string | null;
+}
+
+interface Props extends PageProps {
+    sites?: Site[];
+}
+
+export default function Create({ sites = [], ...props }: Props) {
     const { data, setData, post, processing, errors } = useForm({
+        site_id: '',
         host: '',
         username: '',
         password: '',
@@ -57,6 +68,33 @@ export default function Create({ ...props }: PageProps) {
                         <CardContent>
                             <form onSubmit={submit} className="space-y-6">
                                 <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="site_id">Site</Label>
+                                        <Select
+                                            value={data.site_id}
+                                            onValueChange={(value) =>
+                                                setData('site_id', value === 'none' ? '' : value)
+                                            }
+                                        >
+                                            <SelectTrigger className="border-border/50 focus:border-blue-600">
+                                                <SelectValue placeholder="Select a site (optional)" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="none">None</SelectItem>
+                                                {sites.map((site) => (
+                                                    <SelectItem key={site.id} value={String(site.id)}>
+                                                        {site.name} {site.code && `(${site.code})`}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {errors.site_id && (
+                                            <p className="text-sm text-red-500">
+                                                {errors.site_id}
+                                            </p>
+                                        )}
+                                    </div>
+
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2">
                                             <Label htmlFor="host">Host</Label>

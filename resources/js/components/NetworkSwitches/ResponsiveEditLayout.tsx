@@ -44,6 +44,7 @@ const deviceTypes = {
 
 interface NetworkSwitch {
     id: number;
+    site_id: number | null;
     host: string;
     hostname: string | null;
     username: string;
@@ -52,6 +53,11 @@ interface NetworkSwitch {
     port: string;
     syncing: boolean;
     interfaces?: never[];
+    site?: {
+        id: number;
+        name: string;
+        code: string | null;
+    } | null;
 }
 
 interface MacAddress {
@@ -83,18 +89,26 @@ interface MacAddress {
     };
 }
 
+interface Site {
+    id: number;
+    name: string;
+    code: string | null;
+}
+
 interface Props {
     switch: NetworkSwitch;
     macAddresses: MacAddress[];
     allMacAddresses?: MacAddress[];
     totalMacAddressesCount?: number;
     visibleMacAddressesCount?: number;
+    sites?: Site[];
     errors: any;
 }
 
-export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount, errors }: Props) {
+export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allMacAddresses, totalMacAddressesCount, visibleMacAddressesCount, sites = [], errors }: Props) {
     const [activeTab, setActiveTab] = useState("device");
     const { data, setData, processing, submit } = useForm({
+        site_id: networkSwitch.site_id ? String(networkSwitch.site_id) : '',
         host: networkSwitch.host,
         hostname: networkSwitch.hostname || '',
         username: networkSwitch.username,
@@ -220,6 +234,29 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                             <CardContent className="pt-6">
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="site_id" className="text-sm font-medium">Site</Label>
+                                            <Select
+                                                value={data.site_id}
+                                                onValueChange={(value) =>
+                                                    setData('site_id', value === 'none' ? '' : value)
+                                                }
+                                            >
+                                                <SelectTrigger className="focus:border-ring">
+                                                    <SelectValue placeholder="Select a site (optional)" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="none">None</SelectItem>
+                                                    {sites.map((site) => (
+                                                        <SelectItem key={site.id} value={String(site.id)}>
+                                                            {site.name} {site.code && `(${site.code})`}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors.site_id && <p className="text-sm text-red-500">{errors.site_id}</p>}
+                                        </div>
+
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2">
                                                 <Label htmlFor="host" className="text-sm font-medium">Host</Label>
