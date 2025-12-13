@@ -26,20 +26,25 @@ class WalkDeviceJob implements ShouldQueue
      */
     public function handle(NetworkDeviceService $networkService): void
     {
+        $syncHistory = $this->networkSwitch->syncHistory()->create([
+            'result' => 'in_progress',
+            'completed_at' => null,
+        ]);
+
         try {
             $networkService->getSwitchVersionInfo($this->networkSwitch);
             $networkService->getInterfaceInfo($this->networkSwitch);
-            $networkService->getMacAddressTable($this->networkSwitch);
+            $networkService->getMacAddressTable($this->networkSwitch, $syncHistory);
             $networkService->getCdpNeighbors($this->networkSwitch);
 
-            $this->networkSwitch->syncHistory()->create([
+            $syncHistory->update([
                 'result' => 'completed',
                 'completed_at' => now(),
             ]);
 
             $this->networkSwitch->update(['syncing' => false]);
         } catch (Throwable $e) {
-            $this->networkSwitch->syncHistory()->create([
+            $syncHistory->update([
                 'result' => 'failed',
                 'error_message' => $e->getMessage(),
                 'completed_at' => now(),

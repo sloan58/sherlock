@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Jobs\ProcessInterfaceDescriptionJob;
+use App\Models\DeviceSyncHistory;
 use App\Models\MacAddress;
+use App\Models\MacAddressDiscovery;
 use App\Models\NetworkSwitch;
 use Exception;
 use Illuminate\Bus\Batch;
@@ -19,15 +21,17 @@ class NetworkDeviceService
      * Walk a network device using Netmiko
      *
      * @param NetworkSwitch $networkSwitch
+     * @param DeviceSyncHistory $syncHistory
      * @return void
      * @throws Exception
      * @throws Throwable
      */
-    public function getMacAddressTable(NetworkSwitch $networkSwitch): void
+    public function getMacAddressTable(NetworkSwitch $networkSwitch, DeviceSyncHistory $syncHistory): void
     {
         $macAddresses = $this->getCommandOutput($networkSwitch, 'show mac address-table');
 
         $networkService = new NetworkDeviceService();
+        $discoveredAt = now();
 
         foreach ($macAddresses as $macData) {
             $normalizedData = $this->normalizeMacAddressData($macData, $networkSwitch->device_type);
@@ -47,6 +51,7 @@ class NetworkDeviceService
                 unset($device['mac_address']);
             }
 
+            // Update current state in pivot table
             $networkSwitch->macAddresses()->syncWithoutDetaching([
                 $macAddress->id => $device
             ]);
@@ -56,6 +61,22 @@ class NetworkDeviceService
             if ($networkInterface) {
                 $networkInterface->macAddresses()->syncWithoutDetaching($macAddress->id);
             }
+
+            // Create discovery history record
+            MacAddressDiscovery::create([
+                'device_sync_history_id' => $syncHistory->id,
+                'mac_address_id' => $macAddress->id,
+                'network_switch_id' => $networkSwitch->id,
+                'network_interface_id' => $networkInterface?->id,
+                'discovered_at' => $discoveredAt,
+                'vlan_id' => $device['vlan_id'] ?? null,
+                'type' => $device['type'] ?? null,
+                'age' => $device['age'] ?? null,
+                'secure' => $device['secure'] ?? null,
+                'ntfy' => $device['ntfy'] ?? null,
+                'ports' => $device['ports'] ?? null,
+                'manufacturer' => $device['manufacturer'] ?? null,
+            ]);
         }
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MacAddress extends Model
 {
@@ -29,5 +30,10 @@ class MacAddress extends Model
     public function interfaces(): BelongsToMany
     {
         return $this->belongsToMany(NetworkInterface::class)->withTimestamps();
+    }
+
+    public function discoveries(): HasMany
+    {
+        return $this->hasMany(MacAddressDiscovery::class);
     }
 }

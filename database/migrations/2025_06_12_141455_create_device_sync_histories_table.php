@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('device_sync_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('network_switch_id')->constrained()->cascadeOnDelete();
-            $table->enum('result', ['completed', 'failed']);
+            $table->enum('result', ['completed', 'failed', 'in_progress']);
             $table->text('error_message')->nullable();
-            $table->timestamp('completed_at');
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

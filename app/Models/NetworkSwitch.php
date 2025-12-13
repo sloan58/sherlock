@@ -94,4 +94,9 @@ class NetworkSwitch extends Model
     {
         return $this->belongsTo(Site::class);
     }
+
+    public function discoveries(): HasMany
+    {
+        return $this->hasMany(MacAddressDiscovery::class);
+    }
 }

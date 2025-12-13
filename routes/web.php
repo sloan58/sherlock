@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\NetworkSwitchController;
+use App\Http\Controllers\MacAddressDiscoveryController;
 use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -34,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('network-switches/{networkSwitch}/walk', [NetworkSwitchController::class, 'walk'])->name('network-switches.walk');
     Route::get('/network-switches/{networkSwitch}/sync-history', [NetworkSwitchController::class, 'getSyncHistory'])
         ->name('network-switches.sync-history');
+
+    // MAC Address Discovery Routes
+    Route::get('/mac-address-discoveries', [MacAddressDiscoveryController::class, 'index'])->name('mac-address-discoveries.index');
 
 
 
