@@ -30,6 +30,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Site Routes
     Route::resource('sites', \App\Http\Controllers\SiteController::class);
 
+    // User Routes
+    Route::resource('users', \App\Http\Controllers\UserController::class);
+
     // Network Switch Routes
     Route::resource('network-switches', NetworkSwitchController::class);
     Route::post('network-switches/{networkSwitch}/walk', [NetworkSwitchController::class, 'walk'])->name('network-switches.walk');
