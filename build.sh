@@ -32,14 +32,6 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ sherlock-app image pushed successfully!"
 
-echo "📦 Building sherlock-proxy image..."
-docker build --platform=linux/amd64 -t kcr.karmatek.io/sherlock-proxy:latest -f docker/nginx/Dockerfile .
-if [ $? -ne 0 ]; then
-    echo "❌ Failed to build sherlock-proxy image"
-    exit 1
-fi
-echo "✅ sherlock-proxy image built successfully!"
-
 echo "📦 Pushing sherlock-proxy image..."
 docker push kcr.karmatek.io/sherlock-proxy:latest
 if [ $? -ne 0 ]; then
