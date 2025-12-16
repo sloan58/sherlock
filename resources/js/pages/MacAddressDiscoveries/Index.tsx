@@ -167,6 +167,31 @@ export default function Index({ discoveries, switches, interfaces, filters }: Pr
         });
     };
 
+    // Filter interfaces based on selected switch
+    const filteredInterfaces = useMemo(() => {
+        if (!data.network_switch_id || data.network_switch_id === 'all') {
+            return interfaces;
+        }
+        const switchId = parseInt(data.network_switch_id, 10);
+        return interfaces.filter(iface => iface.network_switch?.id === switchId);
+    }, [interfaces, data.network_switch_id]);
+
+    // Handle switch change - clear interface if it doesn't belong to the new switch
+    const handleSwitchChange = (value: string) => {
+        const newSwitchId = value === 'all' ? '' : value;
+        setData('network_switch_id', newSwitchId);
+        
+        // If an interface is selected, check if it belongs to the new switch
+        if (data.network_interface_id && newSwitchId) {
+            const switchId = parseInt(newSwitchId, 10);
+            const selectedInterface = interfaces.find(iface => String(iface.id) === data.network_interface_id);
+            if (selectedInterface && selectedInterface.network_switch?.id !== switchId) {
+                // Clear interface selection if it doesn't belong to the new switch
+                setData('network_interface_id', '');
+            }
+        }
+    };
+
     return (
         <AppLayout>
             <Head title="MAC Address Discovery History" />
@@ -208,7 +233,7 @@ export default function Index({ discoveries, switches, interfaces, filters }: Pr
                                     <Label htmlFor="network_switch_id">Network Switch</Label>
                                     <Select
                                         value={data.network_switch_id || 'all'}
-                                        onValueChange={(value) => setData('network_switch_id', value === 'all' ? '' : value)}
+                                        onValueChange={handleSwitchChange}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="All switches" />
@@ -233,11 +258,17 @@ export default function Index({ discoveries, switches, interfaces, filters }: Pr
                                         onValueChange={(value) => setData('network_interface_id', value === 'all' ? '' : value)}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="All interfaces" />
+                                            <SelectValue placeholder={
+                                                !data.network_switch_id || data.network_switch_id === 'all' 
+                                                    ? "All interfaces" 
+                                                    : filteredInterfaces.length === 0 
+                                                        ? "No interfaces for selected switch"
+                                                        : "Select interface"
+                                            } />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="all">All interfaces</SelectItem>
-                                            {interfaces.map((iface) => (
+                                            {filteredInterfaces.map((iface) => (
                                                 <SelectItem key={iface.id} value={String(iface.id)}>
                                                     {iface.interface}
                                                     {iface.network_switch && ` - ${iface.network_switch.hostname || iface.network_switch.host}`}
