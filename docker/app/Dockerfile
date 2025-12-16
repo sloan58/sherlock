@@ -25,7 +25,7 @@ COPY . .
 RUN composer install --optimize-autoloader --no-dev --ignore-platform-reqs
 
 # Main Laravel app build
-FROM dunglas/frankenphp AS app
+FROM dunglas/frankenphp:1.10-php8.4-bookworm AS app
 
 RUN apt update && apt install -y supervisor netcat-openbsd python3-pip python3-venv libssl-dev pkg-config
 
