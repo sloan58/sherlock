@@ -38,10 +38,16 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required_if:auth_source,local|nullable|string|min:8|confirmed',
+            'auth_source' => 'required|in:local,ldap',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Only hash password for local users
+        if ($validated['auth_source'] === 'local' && isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            $validated['password'] = null;
+        }
 
         User::create($validated);
 
@@ -74,16 +80,30 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
+        // If switching from LDAP to local, password is required
+        $passwordRequired = $request->input('auth_source') === 'local' && $user->auth_source === 'ldap';
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => $passwordRequired ? 'required|string|min:8|confirmed' : 'nullable|string|min:8|confirmed',
+            'auth_source' => 'required|in:local,ldap',
         ]);
 
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
+        // Handle password based on auth_source
+        if ($validated['auth_source'] === 'ldap') {
+            // LDAP users don't have passwords
+            $validated['password'] = null;
+        } elseif ($validated['auth_source'] === 'local') {
+            // For local users, hash password if provided
+            if (isset($validated['password']) && !empty($validated['password'])) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                // If no password provided and user was already local, keep existing password
+                if ($user->auth_source === 'local') {
+                    unset($validated['password']);
+                }
+            }
         }
 
         $user->update($validated);

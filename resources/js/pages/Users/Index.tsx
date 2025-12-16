@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
@@ -34,6 +35,7 @@ interface User {
     name: string;
     email: string;
     email_verified_at: string | null;
+    auth_source?: 'local' | 'ldap' | null;
     created_at: string;
     updated_at: string;
 }
@@ -105,20 +107,21 @@ export default function Index({ users, ...props }: Props) {
                             </div>
                         </div>
 
-                        <FuturisticTable>
-                            <FuturisticTableHeader>
-                                <FuturisticTableRow>
-                                    <FuturisticTableHead className="font-mono text-sm font-medium">Name</FuturisticTableHead>
-                                    <FuturisticTableHead className="font-mono text-sm">Email</FuturisticTableHead>
-                                    <FuturisticTableHead className="font-mono text-sm">Verified</FuturisticTableHead>
-                                    <FuturisticTableHead className="font-mono text-sm">Created</FuturisticTableHead>
-                                    <FuturisticTableHead className="text-right">Actions</FuturisticTableHead>
-                                </FuturisticTableRow>
-                            </FuturisticTableHeader>
-                            <FuturisticTableBody>
-                                {filteredUsers.length === 0 ? (
+                            <FuturisticTable>
+                                <FuturisticTableHeader>
                                     <FuturisticTableRow>
-                                        <FuturisticTableCell colSpan={5} className="text-center text-muted-foreground py-12">
+                                        <FuturisticTableHead className="font-mono text-sm font-medium">Name</FuturisticTableHead>
+                                        <FuturisticTableHead className="font-mono text-sm">Email</FuturisticTableHead>
+                                        <FuturisticTableHead className="font-mono text-sm">Auth Source</FuturisticTableHead>
+                                        <FuturisticTableHead className="font-mono text-sm">Verified</FuturisticTableHead>
+                                        <FuturisticTableHead className="font-mono text-sm">Created</FuturisticTableHead>
+                                        <FuturisticTableHead className="text-right">Actions</FuturisticTableHead>
+                                    </FuturisticTableRow>
+                                </FuturisticTableHeader>
+                            <FuturisticTableBody>
+                                    {filteredUsers.length === 0 ? (
+                                        <FuturisticTableRow>
+                                            <FuturisticTableCell colSpan={6} className="text-center text-muted-foreground py-12">
                                             <div className="flex flex-col items-center gap-3">
                                                 <Users className="h-8 w-8 text-muted-foreground/50" />
                                                 <div className="space-y-1">
@@ -146,6 +149,11 @@ export default function Index({ users, ...props }: Props) {
                                             </FuturisticTableCell>
                                             <FuturisticTableCell className="font-mono text-sm">
                                                 {user.email}
+                                            </FuturisticTableCell>
+                                            <FuturisticTableCell>
+                                                <Badge variant={user.auth_source === 'ldap' ? 'default' : 'secondary'} className="text-xs">
+                                                    {(user.auth_source || 'local').toUpperCase()}
+                                                </Badge>
                                             </FuturisticTableCell>
                                             <FuturisticTableCell className="font-mono text-sm">
                                                 {user.email_verified_at ? (

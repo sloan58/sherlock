@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 // Elegant color palette
 const COLORS = [
     'var(--chart-1)',
-    'var(--chart-2)', 
+    'var(--chart-2)',
     'var(--chart-3)',
     'var(--chart-4)',
     'var(--chart-5)',
@@ -60,7 +60,7 @@ function getTopManufacturers(data: any[], topN = 6) {
             { manufacturer: 'Other', count: 15, fill: COLORS[5] },
         ];
     }
-    
+
     const sorted = [...data].sort((a, b) => b.count - a.count);
     const top = sorted.slice(0, topN);
     const rest = sorted.slice(topN);
@@ -77,7 +77,7 @@ function getTopManufacturers(data: any[], topN = 6) {
 export default function Dashboard() {
     const { totalDevices, totalInterfaces, totalMacs, macsByManufacturer, interfacesPerDevice } = usePage().props as any;
     const { areaData, deviceActivity } = generateMockData();
-    
+
     const topManufacturers = getTopManufacturers(macsByManufacturer, 6);
 
     // Area chart config
@@ -113,7 +113,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Stat Cards Row */}
-                <div className="grid gap-6 md:grid-cols-4 sm:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-3 sm:grid-cols-1">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium font-mono">Total Devices</CardTitle>
@@ -121,12 +121,9 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{totalDevices}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-primary">+12%</span> from last month
-                            </p>
                         </CardContent>
                     </Card>
-                    
+
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium font-mono">Total Interfaces</CardTitle>
@@ -134,12 +131,9 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{totalInterfaces}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-primary">+8%</span> from last month
-                            </p>
                         </CardContent>
                     </Card>
-                    
+
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium font-mono">MAC Addresses</CardTitle>
@@ -147,22 +141,6 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{totalMacs}</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-primary">+15%</span> from last month
-                            </p>
-                        </CardContent>
-                    </Card>
-                    
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium font-mono">Security Score</CardTitle>
-                            <Shield className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">94%</div>
-                            <p className="text-xs text-muted-foreground">
-                                <span className="text-primary">+2%</span> from last month
-                            </p>
                         </CardContent>
                     </Card>
                 </div>
@@ -190,31 +168,31 @@ export default function Dashboard() {
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                                        <XAxis 
-                                            dataKey="month" 
-                                            axisLine={false} 
+                                        <XAxis
+                                            dataKey="month"
+                                            axisLine={false}
                                             tickLine={false}
                                             tick={{ fontSize: 12 }}
                                         />
-                                        <YAxis 
-                                            axisLine={false} 
+                                        <YAxis
+                                            axisLine={false}
                                             tickLine={false}
                                             tick={{ fontSize: 12 }}
                                         />
                                         <Tooltip content={ChartTooltipContent} />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="mobile" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="mobile"
                                             stackId="1"
-                                            stroke="var(--chart-1)" 
+                                            stroke="var(--chart-1)"
                                             fill="url(#mobileGradient)"
                                             strokeWidth={2}
                                         />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="desktop" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="desktop"
                                             stackId="1"
-                                            stroke="var(--chart-2)" 
+                                            stroke="var(--chart-2)"
                                             fill="url(#desktopGradient)"
                                             strokeWidth={2}
                                         />
@@ -249,31 +227,31 @@ export default function Dashboard() {
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                                        <XAxis 
-                                            dataKey="month" 
-                                            axisLine={false} 
+                                        <XAxis
+                                            dataKey="month"
+                                            axisLine={false}
                                             tickLine={false}
                                             tick={{ fontSize: 12 }}
                                         />
-                                        <YAxis 
-                                            axisLine={false} 
+                                        <YAxis
+                                            axisLine={false}
                                             tickLine={false}
                                             tick={{ fontSize: 12 }}
                                         />
                                         <Tooltip content={ChartTooltipContent} />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="active" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="active"
                                             stackId="1"
-                                            stroke="var(--chart-3)" 
+                                            stroke="var(--chart-3)"
                                             fill="url(#activeGradient)"
                                             strokeWidth={2}
                                         />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="inactive" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="inactive"
                                             stackId="1"
-                                            stroke="var(--chart-4)" 
+                                            stroke="var(--chart-4)"
                                             fill="url(#inactiveGradient)"
                                             strokeWidth={2}
                                         />

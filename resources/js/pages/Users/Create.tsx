@@ -3,17 +3,28 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Users } from 'lucide-react';
 import { PageProps } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import { Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Create({ ...props }: PageProps) {
+    const [authSource, setAuthSource] = useState<'local' | 'ldap'>('local');
+    
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        auth_source: 'local',
     });
 
     const submit = (e: React.FormEvent) => {
@@ -73,42 +84,70 @@ export default function Create({ ...props }: PageProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="password">Password *</Label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        value={data.password}
-                                        onChange={(e) =>
-                                            setData('password', e.target.value)
-                                        }
-                                        required
-                                        minLength={8}
-                                    />
-                                    {errors.password && (
+                                    <Label htmlFor="auth_source">Authentication Source *</Label>
+                                    <Select
+                                        value={authSource}
+                                        onValueChange={(value: 'local' | 'ldap') => {
+                                            setAuthSource(value);
+                                            setData('auth_source', value);
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="local">Local</SelectItem>
+                                            <SelectItem value="ldap">LDAP</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.auth_source && (
                                         <p className="text-sm text-destructive">
-                                            {errors.password}
+                                            {errors.auth_source}
                                         </p>
                                     )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="password_confirmation">Confirm Password *</Label>
-                                    <Input
-                                        id="password_confirmation"
-                                        type="password"
-                                        value={data.password_confirmation}
-                                        onChange={(e) =>
-                                            setData('password_confirmation', e.target.value)
-                                        }
-                                        required
-                                        minLength={8}
-                                    />
-                                    {errors.password_confirmation && (
-                                        <p className="text-sm text-destructive">
-                                            {errors.password_confirmation}
-                                        </p>
-                                    )}
-                                </div>
+                                {authSource === 'local' && (
+                                    <>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="password">Password *</Label>
+                                            <Input
+                                                id="password"
+                                                type="password"
+                                                value={data.password}
+                                                onChange={(e) =>
+                                                    setData('password', e.target.value)
+                                                }
+                                                required
+                                                minLength={8}
+                                            />
+                                            {errors.password && (
+                                                <p className="text-sm text-destructive">
+                                                    {errors.password}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="password_confirmation">Confirm Password *</Label>
+                                            <Input
+                                                id="password_confirmation"
+                                                type="password"
+                                                value={data.password_confirmation}
+                                                onChange={(e) =>
+                                                    setData('password_confirmation', e.target.value)
+                                                }
+                                                required
+                                                minLength={8}
+                                            />
+                                            {errors.password_confirmation && (
+                                                <p className="text-sm text-destructive">
+                                                    {errors.password_confirmation}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             <div className="flex justify-end space-x-4">

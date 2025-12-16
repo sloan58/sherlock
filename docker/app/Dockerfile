@@ -29,7 +29,7 @@ FROM dunglas/frankenphp:1.10-php8.4-bookworm AS app
 
 RUN apt update && apt install -y supervisor netcat-openbsd python3-pip python3-venv libssl-dev pkg-config
 
-RUN install-php-extensions pcntl pdo_mysql redis
+RUN install-php-extensions pcntl pdo_mysql redis ldap
 
 COPY . /app
 

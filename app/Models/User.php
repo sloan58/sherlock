@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'auth_source',
     ];
 
     /**
@@ -42,7 +43,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            // Password is manually hashed in controllers to handle nullable passwords for LDAP users
         ];
     }
 }

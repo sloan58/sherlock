@@ -13,6 +13,7 @@ yarn-error.log*
 .env
 .env.*
 !.env.production
+storage/database.sqlite
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
