@@ -1,35 +1,4 @@
 #!/bin/sh
-set -e
-
-# Load Laravel-style .env file into shell environment
-# Wait for .env to be mounted
-ENV_PATH="/app/.env"
-echo "Waiting for $ENV_PATH to be available..."
-
-while [ ! -f "$ENV_PATH" ]; do
-    sleep 0.5
-done
-
-# Load env vars from mounted .env
-set -a
-. "$ENV_PATH"
-set +a
-
-# Laravel production bootstrapping
-php artisan optimize
-
-# Wait for MySQL to start completely
-echo "Waiting for database DNS resolution for $DB_HOST..."
-until getent hosts "$DB_HOST" > /dev/null; do
-    echo "DNS not ready for $DB_HOST. Waiting..."
-    sleep 2
-done
-
-echo "DNS resolved. Waiting for $DB_HOST:$DB_PORT to be accessible..."
-until nc -z "$DB_HOST" "$DB_PORT"; do
-    echo "Database not accepting connections yet. Waiting..."
-    sleep 2
-done
 
 # Run migrations
 php artisan migrate --force

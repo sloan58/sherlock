@@ -1,71 +1,26 @@
-version: '3.8'
-
 services:
   app:
     image: kcr.karmatek.io/sherlock-app:latest
     restart: unless-stopped
     volumes:
       - app_storage:/app/storage
-    depends_on:
-      - mysql
-      - redis
     networks:
-      - sherlock-network
+      - sherlock
 
-  mysql:
-    image: mysql:8.0
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - sherlock-network
-
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    networks:
-      - sherlock-network
-
-  nginx:
-    image: kcr.karmatek.io/sherlock-proxy:latest
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - nginx_logs:/var/log/nginx
-#     Optional SSL certificates - uncomment and mount your certificates
-#      - ./path/to/your/cert.pem:/etc/nginx/ssl/cert.pem
-#      - ./path/to/your/key.pem:/etc/nginx/ssl/key.pem
-    depends_on:
-      - app
-    networks:
-      - sherlock-network
-
-  websocket:
-    image: kcr.karmatek.io/sherlock-websocket:latest
-    restart: unless-stopped
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      - redis
-    networks:
-      - sherlock-network
+#  websocket:
+#    image: kcr.karmatek.io/sherlock-websocket:latest
+#    restart: unless-stopped
+#    environment:
+#      - REDIS_HOST=redis
+#      - REDIS_PORT=6379
+#    depends_on:
+#      - redis
+#    networks:
+#      - sherlock
 
 volumes:
   app_storage:
-  mysql_data:
-  redis_data:
-  nginx_logs:
 
 networks:
-  sherlock-network:
+  sherlock:
     driver: bridge

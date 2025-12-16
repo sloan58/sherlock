@@ -22,7 +22,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader --no-dev --ignore-platform-reqs
 
 # Main Laravel app build
 FROM dunglas/frankenphp AS app
