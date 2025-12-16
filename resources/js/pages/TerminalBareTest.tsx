@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useXTerm } from 'react-xtermjs';
+import { getWebSocketUrl } from '@/lib/websocket';
 
 export default function TerminalBareTest() {
     const { instance, ref } = useXTerm({
@@ -63,7 +64,7 @@ export default function TerminalBareTest() {
         setIsConnecting(true);
 
         try {
-            const ws = new WebSocket(`ws://localhost:8080`);
+            const ws = new WebSocket(getWebSocketUrl());
             wsRef.current = ws;
 
             ws.onopen = () => {

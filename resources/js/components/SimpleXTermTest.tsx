@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
+import { getWebSocketUrl } from '@/lib/websocket';
 
 // Hardcoded switch connection details for testing
 const SWITCH_HOST = '10.134.17.26';
@@ -33,7 +34,7 @@ export default function SimpleXTermTest() {
     term.writeln('Connecting to SSH switch...');
 
     // Connect to WebSocket SSH proxy
-    const ws = new WebSocket('ws://localhost:8080');
+    const ws = new WebSocket(getWebSocketUrl());
     wsRef.current = ws;
 
     ws.onopen = () => {

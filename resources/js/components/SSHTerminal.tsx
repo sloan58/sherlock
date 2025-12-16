@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Wifi, PanelLeft } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getWebSocketUrl } from '@/lib/websocket';
 
 interface SSHTerminalProps {
     networkSwitchId: number;
@@ -61,7 +62,7 @@ export default function SSHTerminalComponent({
         termRef.current = term;
 
         // Connect to WebSocket SSH proxy
-        const ws = new WebSocket('ws://localhost:8080');
+        const ws = new WebSocket(getWebSocketUrl());
         wsRef.current = ws;
 
         ws.onopen = () => {
