@@ -24,3 +24,4 @@ yarn-error.log
 /.zed
 database/data/network_switches.json
 lib/python/.venv
+storage/database.sqlite
