@@ -43,12 +43,13 @@ export default function Create({ sites = [], ...props }: Props) {
         host: '',
         username: '',
         password: '',
-        device_type: 'cisco_nxos',
+        device_type: 'cisco_ios',
         port: '22',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        // @ts-ignore
         post(route('network-switches.store'));
     };
 
@@ -57,11 +58,11 @@ export default function Create({ sites = [], ...props }: Props) {
             <Head title="Add Network Switch" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <Card className="border border-primary/20 bg-card/50 backdrop-blur-sm shadow-lg shadow-primary/5">
-                        <CardHeader className="border-b border-primary/20">
-                            <CardTitle className="flex items-center gap-2 font-mono text-primary">
-                                <Network className="h-5 w-5 text-primary" />
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <Card className="border-primary/20 bg-card/50 shadow-primary/5 border shadow-lg backdrop-blur-sm">
+                        <CardHeader className="border-primary/20 border-b">
+                            <CardTitle className="text-primary flex items-center gap-2 font-mono">
+                                <Network className="text-primary h-5 w-5" />
                                 Add Network Switch
                             </CardTitle>
                         </CardHeader>
@@ -70,12 +71,7 @@ export default function Create({ sites = [], ...props }: Props) {
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="site_id">Site</Label>
-                                        <Select
-                                            value={data.site_id}
-                                            onValueChange={(value) =>
-                                                setData('site_id', value === 'none' ? '' : value)
-                                            }
-                                        >
+                                        <Select value={data.site_id} onValueChange={(value) => setData('site_id', value === 'none' ? '' : value)}>
                                             <SelectTrigger className="border-border/50 focus:border-blue-600">
                                                 <SelectValue placeholder="Select a site (optional)" />
                                             </SelectTrigger>
@@ -88,11 +84,7 @@ export default function Create({ sites = [], ...props }: Props) {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        {errors.site_id && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.site_id}
-                                            </p>
-                                        )}
+                                        {errors.site_id && <p className="text-sm text-red-500">{errors.site_id}</p>}
                                     </div>
 
                                     <div className="space-y-2">
@@ -101,7 +93,7 @@ export default function Create({ sites = [], ...props }: Props) {
                                             <TooltipProvider>
                                                 <Tooltip>
                                                     <TooltipTrigger>
-                                                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                                                        <HelpCircle className="text-muted-foreground h-4 w-4" />
                                                     </TooltipTrigger>
                                                     <TooltipContent>
                                                         <p>The FQDN or IP address of the device</p>
@@ -113,17 +105,11 @@ export default function Create({ sites = [], ...props }: Props) {
                                             id="host"
                                             type="text"
                                             value={data.host}
-                                            onChange={(e) =>
-                                                setData('host', e.target.value)
-                                            }
+                                            onChange={(e) => setData('host', e.target.value)}
                                             required
                                             className="border-border/50 focus:border-blue-600"
                                         />
-                                        {errors.host && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.host}
-                                            </p>
-                                        )}
+                                        {errors.host && <p className="text-sm text-red-500">{errors.host}</p>}
                                     </div>
 
                                     <div className="space-y-2">
@@ -132,17 +118,11 @@ export default function Create({ sites = [], ...props }: Props) {
                                             id="username"
                                             type="text"
                                             value={data.username}
-                                            onChange={(e) =>
-                                                setData('username', e.target.value)
-                                            }
+                                            onChange={(e) => setData('username', e.target.value)}
                                             required
                                             className="border-border/50 focus:border-blue-600"
                                         />
-                                        {errors.username && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.username}
-                                            </p>
-                                        )}
+                                        {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
                                     </div>
 
                                     <div className="space-y-2">
@@ -151,50 +131,28 @@ export default function Create({ sites = [], ...props }: Props) {
                                             id="password"
                                             type="password"
                                             value={data.password}
-                                            onChange={(e) =>
-                                                setData('password', e.target.value)
-                                            }
+                                            onChange={(e) => setData('password', e.target.value)}
                                             required
                                             className="border-border/50 focus:border-blue-600"
                                         />
-                                        {errors.password && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.password}
-                                            </p>
-                                        )}
+                                        {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="device_type">
-                                            Device Type
-                                        </Label>
-                                        <Select
-                                            value={data.device_type}
-                                            onValueChange={(value) =>
-                                                setData('device_type', value)
-                                            }
-                                        >
+                                        <Label htmlFor="device_type">Device Type</Label>
+                                        <Select value={data.device_type} onValueChange={(value) => setData('device_type', value)}>
                                             <SelectTrigger className="border-border/50 focus:border-blue-600">
                                                 <SelectValue placeholder="Select device type" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {Object.entries(deviceTypes).map(
-                                                    ([value, label]) => (
-                                                        <SelectItem
-                                                            key={value}
-                                                            value={value}
-                                                        >
-                                                            {label}
-                                                        </SelectItem>
-                                                    )
-                                                )}
+                                                {Object.entries(deviceTypes).map(([value, label]) => (
+                                                    <SelectItem key={value} value={value}>
+                                                        {label}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        {errors.device_type && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.device_type}
-                                            </p>
-                                        )}
+                                        {errors.device_type && <p className="text-sm text-red-500">{errors.device_type}</p>}
                                     </div>
 
                                     <div className="space-y-2">
@@ -203,16 +161,10 @@ export default function Create({ sites = [], ...props }: Props) {
                                             id="port"
                                             type="number"
                                             value={data.port}
-                                            onChange={(e) =>
-                                                setData('port', e.target.value)
-                                            }
+                                            onChange={(e) => setData('port', e.target.value)}
                                             className="border-border/50 focus:border-blue-600"
                                         />
-                                        {errors.port && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.port}
-                                            </p>
-                                        )}
+                                        {errors.port && <p className="text-sm text-red-500">{errors.port}</p>}
                                     </div>
                                 </div>
 
@@ -222,9 +174,8 @@ export default function Create({ sites = [], ...props }: Props) {
                                         asChild
                                         className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
                                     >
-                                        <Link href={route('network-switches.index')}>
-                                            Cancel
-                                        </Link>
+                                        {/* @ts-ignore */}
+                                        <Link href={route('network-switches.index')}>Cancel</Link>
                                     </Button>
                                     <Button
                                         type="submit"
@@ -241,4 +192,4 @@ export default function Create({ sites = [], ...props }: Props) {
             </div>
         </AppLayout>
     );
-} 
+}
