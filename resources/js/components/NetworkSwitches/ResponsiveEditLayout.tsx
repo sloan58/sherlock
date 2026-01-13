@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { 
-    Settings, 
-    Database, 
-    Network, 
-    Terminal, 
+import {
+    Settings,
+    Database,
+    Network,
+    Terminal,
     Clock,
     ArrowLeft,
     Save,
@@ -39,6 +39,7 @@ import { HelpCircle } from 'lucide-react';
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',
+    cisco_xe: 'Cisco IOS-XE',
     cisco_nxos: 'Cisco NXOS',
 } as const;
 
@@ -119,11 +120,13 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        //  @ts-ignore
         submit('put', route('network-switches.update', { network_switch: networkSwitch.id }));
     };
 
     const walkDevice = () => {
         router.post(
+            //  @ts-ignore
             route('network-switches.walk', { networkSwitch: networkSwitch.id }),
             {},
             {
@@ -156,6 +159,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
             <div className="flex items-center justify-between p-6">
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="sm" asChild>
+                        {/* @ts-ignore */}
                         <Link href={route('network-switches.index')}>
                             <ArrowLeft className="h-4 w-4 mr-2" />
                             Back
@@ -182,36 +186,36 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
                 <div className="mb-6">
                     <TabsList className="flex flex-col sm:flex-row gap-2 p-1 h-auto">
-                        <TabsTrigger 
-                            value="device" 
+                        <TabsTrigger
+                            value="device"
                             className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Settings className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">Device</span>
                         </TabsTrigger>
-                        <TabsTrigger 
-                            value="macs" 
+                        <TabsTrigger
+                            value="macs"
                             className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Database className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">MAC Addresses</span>
                         </TabsTrigger>
-                        <TabsTrigger 
-                            value="interfaces" 
+                        <TabsTrigger
+                            value="interfaces"
                             className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Network className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">Interfaces</span>
                         </TabsTrigger>
-                        <TabsTrigger 
-                            value="history" 
+                        <TabsTrigger
+                            value="history"
                             className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Clock className="h-4 w-4" />
                             <span className="hidden sm:inline font-medium">History</span>
                         </TabsTrigger>
-                        <TabsTrigger 
-                            value="terminal" 
+                        <TabsTrigger
+                            value="terminal"
                             className="flex items-center gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:border-primary/30 data-[state=active]:shadow-sm transition-all duration-200 hover:bg-accent rounded-lg px-4 py-2.5 text-muted-foreground"
                         >
                             <Terminal className="h-4 w-4" />
@@ -330,10 +334,10 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                                         <div className="space-y-2">
                                             <Label htmlFor="port" className="text-sm font-medium">Port</Label>
-                                            <Input 
-                                                id="port" 
-                                                type="number" 
-                                                value={data.port} 
+                                            <Input
+                                                id="port"
+                                                type="number"
+                                                value={data.port}
                                                 onChange={(e) => setData('port', e.target.value)}
                                                 className="focus:border-ring"
                                             />
@@ -343,12 +347,13 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                                     <div className="flex justify-end space-x-4 pt-4">
                                         <Button variant="outline" asChild>
+                                            {/* @ts-ignore */}
                                             <Link href={route('network-switches.index')}>Cancel</Link>
                                         </Button>
-                                        <Button 
-                                            type="button" 
+                                        <Button
+                                            type="button"
                                             variant="outline"
-                                            onClick={walkDevice} 
+                                            onClick={walkDevice}
                                             disabled={networkSwitch.syncing}
                                             className="hover:bg-accent"
                                         >
@@ -364,8 +369,8 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
                                                 </>
                                             )}
                                         </Button>
-                                        <Button 
-                                            type="submit" 
+                                        <Button
+                                            type="submit"
                                             disabled={processing}
                                             className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                                         >
@@ -380,7 +385,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                     <TabsContent value="macs" className="h-full">
                         <div className="h-full overflow-hidden">
-                            <EnhancedMacAddressTable 
+                            <EnhancedMacAddressTable
                                 macAddresses={macAddresses}
                                 allMacAddresses={allMacAddresses}
                                 totalMacAddressesCount={totalMacAddressesCount}
@@ -392,7 +397,7 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                     <TabsContent value="interfaces" className="h-full">
                         <div className="h-full overflow-hidden">
-                            <EnhancedInterfacesTable 
+                            <EnhancedInterfacesTable
                                 interfaces={networkSwitch.interfaces || []}
                                 className="h-full"
                             />
@@ -417,8 +422,8 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
 
                     <TabsContent value="terminal" className="h-full">
                         <div className="h-full overflow-hidden">
-                            <SSHTerminalComponent 
-                                networkSwitchId={networkSwitch.id} 
+                            <SSHTerminalComponent
+                                networkSwitchId={networkSwitch.id}
                                 networkSwitchHost={networkSwitch.host}
                                 networkSwitchUsername={networkSwitch.username}
                                 networkSwitchPassword={networkSwitch.password}
@@ -430,4 +435,4 @@ export function ResponsiveEditLayout({ switch: networkSwitch, macAddresses, allM
             </Tabs>
         </div>
     );
-} 
+}

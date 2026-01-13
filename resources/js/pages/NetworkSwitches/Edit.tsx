@@ -7,6 +7,7 @@ import { ResponsiveEditLayout } from '@/components/NetworkSwitches/ResponsiveEdi
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',
+    cisco_xe: 'Cisco IOS-XE',
     cisco_nxos: 'Cisco NXOS',
 } as const;
 

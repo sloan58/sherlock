@@ -12,5 +12,12 @@
         "password": "your_password_here",
         "type": "cisco_nxos",
         "port": "22"
+    },
+    {
+        "host": "switch3.example.com",
+        "username": "admin",
+        "password": "your_password_here",
+        "type": "cisco_xe",
+        "port": "22"
     }
 ] 

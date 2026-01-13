@@ -56,18 +56,17 @@ class NetworkDeviceService
                 $macAddress->id => $device
             ]);
 
-            $networkInterface = $networkSwitch->interfaces()->where('interface_short', $macData['ports'])->first();
-
-            if ($networkInterface) {
+            if (isset($macData['ports']) && $networkInterface = $networkSwitch->interfaces()->where('interface_short', $macData['ports'])->first()) {
                 $networkInterface->macAddresses()->syncWithoutDetaching($macAddress->id);
             }
+
 
             // Create discovery history record
             MacAddressDiscovery::create([
                 'device_sync_history_id' => $syncHistory->id,
                 'mac_address_id' => $macAddress->id,
                 'network_switch_id' => $networkSwitch->id,
-                'network_interface_id' => $networkInterface?->id,
+                'network_interface_id' => $networkInterface->id ?? null,
                 'discovered_at' => $discoveredAt,
                 'vlan_id' => $device['vlan_id'] ?? null,
                 'type' => $device['type'] ?? null,
@@ -130,6 +129,8 @@ class NetworkDeviceService
             'use_textfsm' => true,
         ]);
 
+        info(__METHOD__ . ' $jsonInput: ', [$jsonInput]);
+
         // Execute generalized Python script
         $process = [
             base_path('lib/python/.venv/bin/python'),
@@ -137,6 +138,8 @@ class NetworkDeviceService
         ];
 
         $response = $this->runCommand($process, $jsonInput);
+
+        info(__METHOD__ . ' $response: ', [$response]);
 
         $networkSwitch->update(...$response);
 
@@ -167,6 +170,8 @@ class NetworkDeviceService
             'use_textfsm' => true,
         ]);
 
+        info(__METHOD__ . ' $jsonInput: ', [$jsonInput]);
+
         // Execute generalized Python script
         $process = [
             base_path('lib/python/.venv/bin/python'),
@@ -174,6 +179,8 @@ class NetworkDeviceService
         ];
 
         $response = $this->runCommand($process, $jsonInput);
+
+        info(__METHOD__ . ' $response: ', [$response]);
 
         foreach ($response as $interfaceData) {
             $networkSwitch->interfaces()
@@ -291,6 +298,9 @@ class NetworkDeviceService
      */
     private function runCommand(array $command, ?string $input)
     {
+        info(__METHOD__ . ' $command: ', [$command]);
+        info(__METHOD__ . ' $input: ', [$input]);
+
         try {
             // Execute Python script with JSON input
             $process = Process::timeout(60);
@@ -301,12 +311,16 @@ class NetworkDeviceService
 
             $result = $process->run($command);
 
+            info(__METHOD__ . ' $result: ', [$result]);
+
             if ($result->failed()) {
                 throw new \RuntimeException('Process failed: ' . $result->errorOutput());
             }
 
             // Decode the JSON response from Python
             $response = json_decode($result->output(), true);
+
+            info(__METHOD__ . ' $response: ', [$response]);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \RuntimeException("Failed to decode Python response: " . json_last_error_msg());
@@ -331,7 +345,7 @@ class NetworkDeviceService
                 'ntfy' => $data['ntfy'] ?? null,
                 'ports' => $data['ports'] ?? null,
             ],
-            'cisco_ios' => [
+            'cisco_ios', 'cisco_xe' => [
                 'mac_address' => $data['destination_address'],
                 'vlan_id' => $data['vlan_id'] === 'All' ? null : $data['vlan_id'],
                 'type' => strtolower($data['type']),

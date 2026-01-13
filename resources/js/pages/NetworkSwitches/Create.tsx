@@ -24,6 +24,7 @@ import { Link } from '@inertiajs/react';
 
 const deviceTypes = {
     cisco_ios: 'Cisco IOS',
+    cisco_xe: 'Cisco IOS-XE',
     cisco_nxos: 'Cisco NXOS',
 } as const;
 

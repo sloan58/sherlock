@@ -4,6 +4,8 @@ import sys
 import json
 import logging
 import os
+import io
+from contextlib import redirect_stdout, redirect_stderr
 from CiscoInterfaceNameConverter import converter
 from netmiko import ConnectHandler, NetmikoAuthenticationException, NetmikoTimeoutException
 
@@ -20,10 +22,10 @@ logging.basicConfig(
 def main():
     try:
         raw_input = sys.stdin.read()
-        logging.debug(f"Raw input received: {raw_input}")
+        logging.info(f"Raw input received: {raw_input}")
 
         input_data = json.loads(raw_input)
-        logging.debug(f"Parsed input data: {json.dumps(input_data, indent=2)}")
+        logging.info(f"Parsed input data: {json.dumps(input_data, indent=2)}")
 
         # Extract device and command
         device = input_data.get('device')
@@ -39,11 +41,19 @@ def main():
             output = net_connect.send_command(command, use_textfsm=use_textfsm, read_timeout=60)
             if command == 'show interface':
                 for key, interface in enumerate(output):
-                    output[key]['interface_short'] = converter.convert_interface(
-                    interface_name=interface['interface'],
-                    return_short=True
-                    )
-            logging.debug(f"Command output: {json.dumps(output, indent=2)}")
+                    # Suppress stdout/stderr from converter to prevent error messages in JSON payload
+                    null_stream = io.StringIO()
+                    try:
+                        with redirect_stdout(null_stream), redirect_stderr(null_stream):
+                            interface_short = converter.convert_interface(
+                                interface_name=interface['interface'],
+                                return_short=True
+                            )
+                        output[key]['interface_short'] = interface_short
+                    except Exception:
+                        # If conversion fails, use the original interface name as fallback
+                        output[key]['interface_short'] = interface['interface']
+            logging.info(f"Command output: {json.dumps(output, indent=2)}")
             print(json.dumps(output))
 
     except NetmikoTimeoutException:
